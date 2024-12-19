@@ -8,7 +8,7 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         List<SimGroup> groups = new ArrayList<>();
-        SimGroup group = new DeltaForce(new SimPosition(1,1));
+        SimGroup group = new DeltaForce();
 
         groups.add(group);
 

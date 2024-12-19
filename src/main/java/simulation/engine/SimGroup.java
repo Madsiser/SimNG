@@ -4,12 +4,11 @@ import simulation.engine.commands.Command;
 
 import java.util.*;
 
-public class SimGroup {
+public class SimGroup extends SimProcessAble {
     protected SimPosition position;
     private final String name;
     private final List<SimUnit> units = new ArrayList<>();
     private final List<Command> commandQueue = new ArrayList<>();
-    private final Map<String, SimWork> workQueue = new HashMap<>();
     protected List<SimGroup> visibleGroups = new ArrayList<>();
     protected Command currentOrder;
     protected LinkedList<SimVector2i> route = new LinkedList<>();
@@ -75,20 +74,6 @@ public class SimGroup {
             this.position.add(direction);
         }
         System.out.println(this.position);
-    }
-
-    protected final void addWork(String name, Runnable action, int frequency) {
-        workQueue.put(name, new SimWork(action, frequency));
-    }
-
-    public final void runStep(int currentStep) {
-        for (Map.Entry<String, SimWork> entry : workQueue.entrySet()) {
-            SimWork work = entry.getValue();
-            if (currentStep % work.frequency() == 0) {
-                work.action().run();
-            }
-        }
-
     }
 
     public final void updateVisibleGroups(List<SimGroup> visibleGroups) {
