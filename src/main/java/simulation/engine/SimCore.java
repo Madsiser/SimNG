@@ -17,7 +17,7 @@ public class SimCore {
             for (SimUnit unit : units) {
                 List<SimUnit> visibleUnits = getVisibleUnits(unit);
                 unit.updateVisibleUnits(visibleUnits);
-                unit.runStep();
+                unit.runStep(currentStep);
             }
             try {
                 Thread.sleep(1000);
