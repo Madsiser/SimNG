@@ -5,16 +5,16 @@ import simulation.engine.commands.Command;
 import java.util.*;
 
 public class SimGroup {
-    protected Position position;
+    protected SimPosition position;
     private final String name;
     private final List<SimUnit> units = new ArrayList<>();
     private final List<Command> commandQueue = new ArrayList<>();
     private final Map<String, SimWork> workQueue = new HashMap<>();
     protected List<SimGroup> visibleGroups = new ArrayList<>();
     protected Command currentOrder;
-    protected LinkedList<Vector2i> route = new LinkedList<>();
+    protected LinkedList<SimVector2i> route = new LinkedList<>();
 
-    public SimGroup(String name, Position position) {
+    public SimGroup(String name, SimPosition position) {
         this.name = name;
         this.position = position;
     }
@@ -70,7 +70,7 @@ public class SimGroup {
     }
 
     protected void move(){
-        Vector2i direction = route.poll();
+        SimVector2i direction = route.poll();
         if (direction != null){
             this.position.add(direction);
         }

@@ -1,10 +1,10 @@
 package simulation.engine;
 
-public class Position {
+public class SimPosition {
     private Integer x;
     private Integer y;
 
-    public Position(Integer x, Integer y) {
+    public SimPosition(Integer x, Integer y) {
         this.x = x;
         this.y = y;
     }
@@ -25,17 +25,17 @@ public class Position {
         return y;
     }
 
-    public double distanceTo(Position other) {
+    public double distanceTo(SimPosition other) {
         double dx = this.x - other.getX();
         double dy = this.y - other.getY();
         return Math.sqrt(dx * dx + dy * dy);
     }
 
-    public void add(Position position) {
+    public void add(SimPosition position) {
         this.x += position.getX();
         this.y += position.getY();
     }
-    public void add(Vector2i vector2i) {
+    public void add(SimVector2i vector2i) {
         this.x += vector2i.x;
         this.y += vector2i.y;
     }
