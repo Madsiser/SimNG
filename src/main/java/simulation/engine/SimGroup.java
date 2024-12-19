@@ -2,16 +2,14 @@ package simulation.engine;
 
 import simulation.engine.commands.Command;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class SimGroup {
     protected Position position;
     private final String name;
     private final List<SimUnit> units = new ArrayList<>();
     private final List<Command> commandQueue = new ArrayList<>();
-    private final List<SimWork> workQueue = new ArrayList<>();
+    private final Map<String, SimWork> workQueue = new HashMap<>();
     protected List<SimGroup> visibleGroups = new ArrayList<>();
     protected Command currentOrder;
     protected LinkedList<Vector2i> route = new LinkedList<>();
@@ -19,8 +17,6 @@ public class SimGroup {
     public SimGroup(String name, Position position) {
         this.name = name;
         this.position = position;
-
-        addWork(this::move, 1);
     }
 
     public void addUnit(SimUnit unit) {
@@ -73,7 +69,7 @@ public class SimGroup {
         return new ArrayList<>(units);
     }
 
-    private void move(){
+    protected void move(){
         Vector2i direction = route.poll();
         if (direction != null){
             this.position.add(direction);
@@ -81,17 +77,18 @@ public class SimGroup {
         System.out.println(this.position);
     }
 
-    protected final void addWork(Runnable action, int frequency) {
-        workQueue.add(new SimWork(action, frequency));
+    protected final void addWork(String name, Runnable action, int frequency) {
+        workQueue.put(name, new SimWork(action, frequency));
     }
 
     public final void runStep(int currentStep) {
-
-        for (SimWork work : workQueue) {
+        for (Map.Entry<String, SimWork> entry : workQueue.entrySet()) {
+            SimWork work = entry.getValue();
             if (currentStep % work.frequency() == 0) {
                 work.action().run();
             }
         }
+
     }
 
     public final void updateVisibleGroups(List<SimGroup> visibleGroups) {
