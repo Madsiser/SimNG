@@ -16,8 +16,8 @@ public class SimUnit {
     public final void runStep() {
         currentStep++;
         for (SimWork work : workQueue) {
-            if (currentStep % work.getFrequency() == 0) {
-                work.getAction().run();
+            if (currentStep % work.frequency() == 0) {
+                work.action().run();
             }
         }
     }
