@@ -3,6 +3,7 @@ package simulation.engine;
 import simulation.engine.commands.Command;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class SimGroup {
@@ -13,10 +14,13 @@ public class SimGroup {
     private final List<SimWork> workQueue = new ArrayList<>();
     protected List<SimGroup> visibleGroups = new ArrayList<>();
     protected Command currentOrder;
+    protected LinkedList<Vector2i> route = new LinkedList<>();
 
     public SimGroup(String name, Position position) {
         this.name = name;
         this.position = position;
+
+        addWork(this::move, 1);
     }
 
     public void addUnit(SimUnit unit) {
@@ -48,8 +52,33 @@ public class SimGroup {
         return maxViewRange;
     }
 
+    public Integer getSpeed(){
+        Integer minViewRange = Integer.MAX_VALUE;
+
+        for (SimUnit unit : units) {
+            Integer currentViewRange = unit.viewRange;
+            if (currentViewRange < minViewRange) {
+                minViewRange = currentViewRange;
+            }
+        }
+
+        if (minViewRange == Integer.MAX_VALUE) {
+            return -1;
+        }
+
+        return minViewRange;
+    }
+
     public List<SimUnit> getUnits() {
         return new ArrayList<>(units);
+    }
+
+    private void move(){
+        Vector2i direction = route.poll();
+        if (direction != null){
+            this.position.add(direction);
+        }
+        System.out.println(this.position);
     }
 
     protected final void addWork(Runnable action, int frequency) {

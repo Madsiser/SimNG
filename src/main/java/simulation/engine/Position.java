@@ -1,27 +1,27 @@
 package simulation.engine;
 
 public class Position {
-    private double x;
-    private double y;
+    private Integer x;
+    private Integer y;
 
-    public Position(double x, double y) {
+    public Position(Integer x, Integer y) {
         this.x = x;
         this.y = y;
     }
 
-    public void setY(double y) {
+    public void setY(Integer y) {
         this.y = y;
     }
 
-    public void setX(double x) {
+    public void setX(Integer x) {
         this.x = x;
     }
 
-    public double getX() {
+    public Integer getX() {
         return x;
     }
 
-    public double getY() {
+    public Integer getY() {
         return y;
     }
 
@@ -31,8 +31,17 @@ public class Position {
         return Math.sqrt(dx * dx + dy * dy);
     }
 
-    public Position add(Position vector) {
-        return new Position(this.x + vector.getX(), this.y + vector.getY());
+    public void add(Position position) {
+        this.x += position.getX();
+        this.y += position.getY();
+    }
+    public void add(Vector2i vector2i) {
+        this.x += vector2i.x;
+        this.y += vector2i.y;
+    }
+    public void add(Integer x, Integer y) {
+        this.x += x;
+        this.y += y;
     }
 
     @Override
