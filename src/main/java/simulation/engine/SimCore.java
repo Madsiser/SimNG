@@ -2,22 +2,24 @@ package simulation.engine;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SimCore {
-    private final List<SimUnit> units;
+    private final List<SimGroup> groups;
     private int currentStep = 0;
 
-    public SimCore(List<SimUnit> units) {
-        this.units = units;
+    public SimCore(List<SimGroup> groups) {
+        this.groups = groups;
     }
 
     public void runSimulation() {
         while (true) {
             currentStep++;
-            for (SimUnit unit : units) {
-                List<SimUnit> visibleUnits = getVisibleUnits(unit);
-                unit.updateVisibleUnits(visibleUnits);
-                unit.runStep(currentStep);
+            System.out.println("------------------------");
+            for (SimGroup group : groups) {
+                List<SimGroup> visibleGroups = getVisibleGroups(group);
+                group.updateVisibleGroups(visibleGroups);
+                group.runStep(currentStep);
             }
             try {
                 Thread.sleep(1000);
@@ -28,33 +30,13 @@ public class SimCore {
         }
     }
 
-    private List<SimUnit> getVisibleUnits(SimUnit unit) {
-        List<SimUnit> visibleUnits = new ArrayList<>();
-        for (SimUnit otherUnit : units) {
-            if (otherUnit != unit && isInVisibilityRange(unit, otherUnit)) {
-                visibleUnits.add(otherUnit);
+    private List<SimGroup> getVisibleGroups(SimGroup group) {
+        List<SimGroup> visibleGroups = new ArrayList<>();
+        for (SimGroup otherGroup : this.groups) {
+            if (!otherGroup.equals(group) && group.getViewRange() > group.position.distanceTo(otherGroup.position)) {
+                visibleGroups.add(otherGroup);
             }
         }
-        return visibleUnits;
-    }
-
-    private boolean isInVisibilityRange(SimUnit unit, SimUnit otherUnit) {
-
-        return true;
-    }
-
-    private List<SimUnit> getShotingUnits(SimUnit unit) {
-        List<SimUnit> visibleUnits = new ArrayList<>();
-        for (SimUnit otherUnit : units) {
-            if (otherUnit != unit && isInVisibilityRange(unit, otherUnit)) {
-                visibleUnits.add(otherUnit);
-            }
-        }
-        return visibleUnits;
-    }
-
-    private boolean isInShotingRange(SimUnit unit, SimUnit otherUnit) {
-
-        return true;
+        return visibleGroups;
     }
 }

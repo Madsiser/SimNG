@@ -1,36 +1,22 @@
 package simulation.engine;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class SimUnit {
-    protected Position position;
-    private final List<SimWork> workQueue = new ArrayList<>();
-    protected int visibilityRange;
-    protected List<SimUnit> visibleUnits = new ArrayList<>();
+    public SimForceType type;
+    public Integer viewRange;
+    public Integer shotRange;
+    public Integer speed;
+    public Integer amount;
 
-    protected final void addWork(Runnable action, int frequency) {
-        workQueue.add(new SimWork(action, frequency));
-    }
-
-    public final void runStep(int currentStep) {
-
-        for (SimWork work : workQueue) {
-            if (currentStep % work.frequency() == 0) {
-                work.action().run();
-            }
+    // Konstruktor wymuszający przekazanie wartości
+    public SimUnit(SimForceType type, Integer viewRange, Integer shotRange, Integer speed, Integer amount) {
+        if (type == null || viewRange == null || shotRange == null || speed == null || amount == null) {
+            throw new IllegalArgumentException("Wszystkie pola muszą być wypełnione.");
         }
+        this.type = type;
+        this.viewRange = viewRange;
+        this.shotRange = shotRange;
+        this.speed = speed;
+        this.amount = amount;
     }
-
-    public final void updateVisibleUnits(List<SimUnit> visibleUnits) {
-        this.visibleUnits = visibleUnits;
-        for (SimUnit unit : visibleUnits) {
-            notifyVisibility(unit);
-        }
-    }
-
-    protected final void notifyVisibility(SimUnit unit) {
-        System.out.println(this + " zauważył " + unit);
-    }
-
 }
+

@@ -26,8 +26,8 @@ public class Position {
     }
 
     public double distanceTo(Position other) {
-        double dx = this.x - other.x;
-        double dy = this.y - other.y;
+        double dx = this.x - other.getX();
+        double dy = this.y - other.getY();
         return Math.sqrt(dx * dx + dy * dy);
     }
 

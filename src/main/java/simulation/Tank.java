@@ -1,13 +1,13 @@
 package simulation;
 
+import simulation.engine.SimForceType;
+import simulation.engine.SimGroup;
 import simulation.engine.SimUnit;
 
-public class Tank extends SimUnit {
+public class Tank extends SimUnit{
 
-    public Tank() {
-        addWork(this::move, 3);  // Co 3 kroki - move
-        addWork(this::scan, 2);   // Co 2 kroki - scan
-        addWork(this::shoot, 1);  // Co 1 krok - shoot
+    public Tank(SimForceType type, Integer viewRange, Integer shotRange, Integer speed, Integer amount) {
+        super(type, viewRange, shotRange, speed, amount);
     }
 
     private void move() {
