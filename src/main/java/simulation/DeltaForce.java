@@ -5,7 +5,7 @@ import simulation.engine.*;
 public class DeltaForce extends SimGroup {
 
     public DeltaForce() {
-        super("Delta Force", new SimPosition(1,2));
+        super("Delta Force", new SimPosition(20,20));
 
 
         SimUnit unit = new Tank(7,6,1,5);

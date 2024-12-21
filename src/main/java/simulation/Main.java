@@ -36,7 +36,7 @@ public class Main {
 
         simulation.startSimulation();
         int counter = 10000;
-        while (counter > 0) {
+        while (true) {
             counter--;
             try {
                 Thread.sleep(10);
@@ -49,6 +49,6 @@ public class Main {
             panel.updateGroups(allGroups); // Aktualizacja grup w panelu
         }
 
-        simulation.stopSimulation();
+//        simulation.stopSimulation();
     }
 }

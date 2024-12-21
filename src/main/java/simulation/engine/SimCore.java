@@ -66,7 +66,7 @@ public class SimCore {
                 group.updateVisibleGroups(visibleGroups);
             }
             try {
-                Thread.sleep(500);
+                Thread.sleep(1);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 break;

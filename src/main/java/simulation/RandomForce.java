@@ -18,12 +18,12 @@ public class RandomForce extends SimGroup {
         this.addUnit(unit);
 
         List<SimVector2i> directions = new ArrayList<>();
-        directions.add(SimVector2i.RIGHT);
+        directions.add(SimVector2i.UP);
         directions.add(SimVector2i.DOWN);
         directions.add(SimVector2i.LEFT);
         directions.add(SimVector2i.RIGHT);
 
-        int length = 100;
+        int length = 1000;
         for (int i = 0; i < length; i++) {
             SimVector2i randomDirection = directions.get(random.nextInt(directions.size()));
             this.route.add(randomDirection);
@@ -38,7 +38,7 @@ public class RandomForce extends SimGroup {
         SimVector2i direction = route.poll();
         if (direction != null){
             this.position.add(direction);
-            addTask(this::move,(random.nextInt()%10)+1);
+            addTask(this::move,(random.nextInt()%1000)+100);
         }
 //        System.out.println(this.position);
     }
