@@ -1,6 +1,7 @@
 package simulation.engine;
 
 import simulation.engine.commands.Command;
+import simulation.engine.processes.SimProcessAble;
 
 import java.util.*;
 

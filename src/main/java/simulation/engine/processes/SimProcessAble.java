@@ -1,9 +1,9 @@
-package simulation.engine;
+package simulation.engine.processes;
 
 import java.util.HashMap;
 import java.util.Map;
 
-abstract class SimProcessAble {
+public abstract class SimProcessAble {
 
     protected final Map<String, SimProcess> processQueue = new HashMap<>();
 
@@ -11,7 +11,7 @@ abstract class SimProcessAble {
         processQueue.put(name, new SimProcess(action, frequency));
     }
 
-    protected final void runStep(int currentStep) {
+    public final void runStep(int currentStep) {
         for (Map.Entry<String, SimProcess> entry : processQueue.entrySet()) {
             SimProcess work = entry.getValue();
             if (currentStep % work.frequency() == 0) {
