@@ -5,19 +5,26 @@ import simulation.engine.*;
 public class DeltaForce extends SimGroup {
 
     public DeltaForce() {
-        super("Delta Force", new SimPosition(1,1));
+        super("Delta Force", new SimPosition(1,2));
 
 
-        SimUnit unit = new Tank(SimForceType.BLUFORCE,5,10,1,5);
+        SimUnit unit = new Tank(7,6,1,5);
         this.addUnit(unit);
 
-        this.route.push(SimVector2i.LEFT);
-        this.route.push(SimVector2i.LEFT);
-        this.route.push(SimVector2i.LEFT);
-        this.route.push(SimVector2i.LEFT);
-        this.route.push(SimVector2i.LEFT);
-        this.route.push(SimVector2i.LEFT);
-        this.route.push(SimVector2i.LEFT);
+        this.route.add(SimVector2i.RIGHT);
+        this.route.add(SimVector2i.RIGHT);
+        this.route.add(SimVector2i.RIGHT);
+        this.route.add(SimVector2i.RIGHT);
+        this.route.add(SimVector2i.RIGHT);
+        this.route.add(SimVector2i.DOWN);
+        this.route.add(SimVector2i.DOWN);
+        this.route.add(SimVector2i.RIGHT);
+        this.route.add(SimVector2i.DOWN);
+        this.route.add(SimVector2i.LEFT);
+        this.route.add(SimVector2i.LEFT);
+        this.route.add(SimVector2i.LEFT);
+        this.route.add(SimVector2i.LEFT);
+        this.route.add(SimVector2i.LEFT);
 
         //addProcess("move", this::move, 1);
         addTask(this::move,1);
@@ -30,7 +37,7 @@ public class DeltaForce extends SimGroup {
             this.position.add(direction);
             addTask(this::move,1);
         }
-        System.out.println(this.position);
+//        System.out.println(this.position);
     }
 
 

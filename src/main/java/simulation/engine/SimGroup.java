@@ -11,13 +11,32 @@ public class SimGroup extends SimProcessAble{
     private final String name;
     private final List<SimUnit> units = new ArrayList<>();
     private final List<Command> commandQueue = new ArrayList<>();
-    protected List<SimGroup> visibleGroups = new ArrayList<>();
+    public List<SimGroup> visibleGroups = new ArrayList<>();
     protected Command currentOrder;
     protected LinkedList<SimVector2i> route = new LinkedList<>();
+    public SimForceType forceType;
 
     public SimGroup(String name, SimPosition position) {
         this.name = name;
         this.position = position;
+        this.forceType = SimForceType.BLUFORCE;
+    }
+    public SimGroup(String name, SimPosition position, SimForceType forceType) {
+        this.name = name;
+        this.position = position;
+        this.forceType = forceType;
+    }
+
+    public SimPosition getPosition() {
+        return position;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Integer getRange(){
+        return 0;
     }
 
     public void addUnit(SimUnit unit) {
@@ -75,7 +94,7 @@ public class SimGroup extends SimProcessAble{
         if (direction != null){
             this.position.add(direction);
         }
-        System.out.println(this.position);
+//        System.out.println(this.position);
     }
 
     public final void updateVisibleGroups(List<SimGroup> visibleGroups) {
@@ -84,14 +103,14 @@ public class SimGroup extends SimProcessAble{
     }
 
     protected final void notifyVisibility(SimGroup group) {
-        System.out.println(this + " zauważył " + group);
+//        System.out.println(this + " zauważył " + group);
     }
 
     @Override
     public String toString() {
         return "SimGroup{" +
                 "name='" + name + '\'' +
-                ", units=" + units +
+                ", pos=" + position +
                 '}';
     }
 }

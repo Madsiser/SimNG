@@ -2,24 +2,68 @@ package simulation.engine;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class SimCore {
     private final List<SimGroup> groups;
     private int currentStep = 0;
+    private volatile boolean running = true;
+    private Thread gameThread;
+    private volatile boolean paused = false;
 
     public SimCore(List<SimGroup> groups) {
         this.groups = groups;
     }
 
+    public void stopSimulation() {
+        running = false;
+        if (gameThread != null) {
+            gameThread.interrupt();
+            try {
+                gameThread.join();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    public void pauseSimulation() {
+        paused = true;
+    }
+
+    public void resumeSimulation() {
+        paused = false;
+        synchronized (this) {
+            notify();
+        }
+    }
+
+    public void startSimulation() {
+        if (gameThread == null || !gameThread.isAlive()) {
+            running = true;
+            gameThread = new Thread(this::runSimulation);
+            gameThread.start();
+        }
+    }
+
     public void runSimulation() {
-        while (true) {
+        while (running) {
+            if (paused) {
+                synchronized (this) {
+                    try {
+                        wait();
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        break;
+                    }
+                }
+            }
             currentStep++;
-            System.out.println("------------"+currentStep+"------------");
+//            System.out.println("------------  " + currentStep + "  ------------");
             for (SimGroup group : groups) {
+                group.runStep(currentStep);
+
                 List<SimGroup> visibleGroups = getVisibleGroups(group);
                 group.updateVisibleGroups(visibleGroups);
-                group.runStep(currentStep);
             }
             try {
                 Thread.sleep(500);
@@ -38,5 +82,9 @@ public class SimCore {
             }
         }
         return visibleGroups;
+    }
+
+    public List<SimGroup> getGroups() {
+        return groups;
     }
 }

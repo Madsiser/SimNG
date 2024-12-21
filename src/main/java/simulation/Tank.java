@@ -6,8 +6,8 @@ import simulation.engine.SimUnit;
 
 public class Tank extends SimUnit{
 
-    public Tank(SimForceType type, Integer viewRange, Integer shotRange, Integer speed, Integer amount) {
-        super(type, viewRange, shotRange, speed, amount);
+    public Tank(Integer viewRange, Integer shotRange, Integer speed, Integer amount) {
+        super(viewRange, shotRange, speed, amount);
     }
 
     private void move() {
