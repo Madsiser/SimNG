@@ -2,28 +2,33 @@ package simulation.engine.processes;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 
 public abstract class SimTaskAble {
 
-    protected final Map<String, SimTask> taskQueue = new HashMap<>();
+    protected final LinkedList<SimTask> taskQueue = new LinkedList<>();
+    protected final LinkedList<SimTask> buforTaskQueue = new LinkedList<>();
 
-    protected final void addTask(String name, Runnable action, int frequency) {
-        taskQueue.put(name, new SimTask(action, frequency));
+    protected final void addTask(Runnable action, int nextCall) {
+        buforTaskQueue.push(new SimTask(action, nextCall));
     }
 
-    public final void runStep(int currentStep) {
-        Iterator<Map.Entry<String, SimTask>> iterator = taskQueue.entrySet().iterator();
+    private final void update() {
+        taskQueue.addAll(buforTaskQueue);
+        buforTaskQueue.clear();
+    }
 
+
+    public void runStep(int currentStep) {
+        update();
+        Iterator<SimTask> iterator = taskQueue.iterator();
         while (iterator.hasNext()) {
-            Map.Entry<String, SimTask> entry = iterator.next();
-            SimTask task = entry.getValue();
-
-            if (task.nextOperation == 0) {
+            SimTask task = iterator.next();
+            task.nextOperation--;
+            if (task.nextOperation <= 1) {
                 task.action.run();
                 iterator.remove();
-            } else {
-                task.nextOperation--;
             }
         }
     }

@@ -19,7 +19,8 @@ public class DeltaForce extends SimGroup {
         this.route.push(SimVector2i.LEFT);
         this.route.push(SimVector2i.LEFT);
 
-        addProcess("move", this::move, 1);
+        //addProcess("move", this::move, 1);
+        addTask(this::move,1);
     }
 
     @Override
@@ -27,10 +28,9 @@ public class DeltaForce extends SimGroup {
         SimVector2i direction = route.poll();
         if (direction != null){
             this.position.add(direction);
+            addTask(this::move,1);
         }
         System.out.println(this.position);
-
-
     }
 
 

@@ -15,14 +15,14 @@ public class SimCore {
     public void runSimulation() {
         while (true) {
             currentStep++;
-            System.out.println("------------------------");
+            System.out.println("------------"+currentStep+"------------");
             for (SimGroup group : groups) {
                 List<SimGroup> visibleGroups = getVisibleGroups(group);
                 group.updateVisibleGroups(visibleGroups);
                 group.runStep(currentStep);
             }
             try {
-                Thread.sleep(1000);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 break;
