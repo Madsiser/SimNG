@@ -77,7 +77,7 @@ public class SimCore {
     private List<SimGroup> getVisibleGroups(SimGroup group) {
         List<SimGroup> visibleGroups = new ArrayList<>();
         for (SimGroup otherGroup : this.groups) {
-            if (!otherGroup.equals(group) && group.getViewRange() > group.position.distanceTo(otherGroup.position)) {
+            if (!otherGroup.equals(group) && (otherGroup.forceType != group.forceType) && group.getViewRange()  > group.position.distanceTo(otherGroup.position)) {
                 visibleGroups.add(otherGroup);
             }
         }
