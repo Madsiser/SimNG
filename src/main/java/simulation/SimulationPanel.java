@@ -24,42 +24,31 @@ public class SimulationPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        for (SimGroup group : groups) {
+        int maxGroupsToDisplay = Math.min(groups.size(), 1000000000);
+        for (int i = 0; i < maxGroupsToDisplay; i++) {
+            SimGroup group = groups.get(i);
             SimPosition pos = group.getPosition();
             int rectWidth = 15;
             int rectHeight = 15;
 
-            // Ustawienie koloru prostokąta
-            if (group.forceType == SimForceType.REDFORCE){
+            if (group.forceType == SimForceType.REDFORCE) {
                 g.setColor(Color.RED);
-            }else{
+            } else {
                 g.setColor(Color.BLUE);
             }
-            // Rysowanie prostokąta z uwzględnieniem środka
             g.fillRect((int) pos.getX() * 20 - rectWidth / 2, (int) pos.getY() * 20 - rectHeight / 2, rectWidth, rectHeight);
-            // Rysowanie nazwy grupy
-            g.drawString(group.getName(), (int) pos.getX() * 20-10, (int) pos.getY() * 20 - 10);
+            g.drawString(group.getName(), (int) pos.getX() * 20 - 10, (int) pos.getY() * 20 - 10);
 
-            // Rysowanie zasięgu jednostek
-            if (group.visibleGroups.isEmpty()){
+            if (group.visibleGroups.isEmpty()) {
                 g.setColor(Color.GREEN);
-            }else{
+            } else {
                 g.setColor(Color.BLUE);
             }
 
             for (SimUnit unit : group.getUnits()) {
-                int range = unit.viewRange*20-10;
-
-                // Rysowanie koła zasięgu
+                int range = unit.viewRange * 20 - 10;
                 g.drawOval((int) pos.getX() * 20 - range, (int) pos.getY() * 20 - range, range * 2, range * 2);
             }
-//            g.setColor(Color.RED);
-//            for (SimUnit unit : group.getUnits()) {
-//                int range = unit.shotRange*20-10;
-//
-//                // Rysowanie koła zasięgu
-//                g.drawOval((int) pos.getX() * 20 - range, (int) pos.getY() * 20 - range, range * 2, range * 2);
-//            }
         }
     }
 

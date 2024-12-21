@@ -5,6 +5,7 @@ import simulation.engine.*;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
@@ -20,6 +21,23 @@ public class Main {
         groups.add(new RandomForce("Golf Force", new SimPosition(27, 15), SimForceType.REDFORCE));
         groups.add(new RandomForce("Hotel Force", new SimPosition(15, 27), SimForceType.REDFORCE));
         groups.add(new RandomForce("India Force", new SimPosition(22, 22), SimForceType.REDFORCE));
+
+
+        Random random = new Random();
+
+        for (int i = 1; i <= 100; i++) {
+            int x = random.nextInt(501); // Losowa wartość x w zakresie 0-500
+            int y = random.nextInt(501); // Losowa wartość y w zakresie 0-500
+            groups.add(new RandomForce("Ally " + i, new SimPosition(x, y), SimForceType.BLUFORCE));
+        }
+
+        for (int i = 1; i <= 100; i++) {
+            int x = random.nextInt(501); // Losowa wartość x w zakresie 0-500
+            int y = random.nextInt(501); // Losowa wartość y w zakresie 0-500
+            groups.add(new RandomForce("Enemy " + i, new SimPosition(x, y), SimForceType.REDFORCE));
+        }
+
+
 
 
 

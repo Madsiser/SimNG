@@ -38,7 +38,7 @@ public class RandomForce extends SimGroup {
         SimVector2i direction = route.poll();
         if (direction != null){
             this.position.add(direction);
-            addTask(this::move,(random.nextInt()%1000)+100);
+            addTask(this::move,(random.nextInt()%5)+5);
         }
 //        System.out.println(this.position);
     }

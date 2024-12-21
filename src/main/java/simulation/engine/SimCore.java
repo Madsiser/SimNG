@@ -57,22 +57,33 @@ public class SimCore {
                     }
                 }
             }
+
+            long startTime = System.currentTimeMillis();
             currentStep++;
-//            System.out.println("------------  " + currentStep + "  ------------");
+            // System.out.println("------------  " + currentStep + "  ------------");
+
             for (SimGroup group : groups) {
                 group.runStep(currentStep);
-
                 List<SimGroup> visibleGroups = getVisibleGroups(group);
                 group.updateVisibleGroups(visibleGroups);
             }
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                break;
+
+            long elapsedTime = System.currentTimeMillis() - startTime;
+            long sleepTime = 100 - elapsedTime;
+
+            if (sleepTime > 0) {
+                try {
+                    Thread.sleep(sleepTime);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            } else {
+                System.out.println("Przekroczono 100 ms w kroku: " + currentStep + " Czas wykonywania: " + elapsedTime + "ms");
             }
         }
     }
+
 
     private List<SimGroup> getVisibleGroups(SimGroup group) {
         List<SimGroup> visibleGroups = new ArrayList<>();
