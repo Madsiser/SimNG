@@ -6,7 +6,6 @@ public abstract class SimUnit {
     public Integer speed;
     public Integer amount;
 
-    // Konstruktor wymuszający przekazanie wartości
     public SimUnit(Integer viewRange, Integer shotRange, Integer speed, Integer amount) {
         if (viewRange == null || shotRange == null || speed == null || amount == null) {
             throw new IllegalArgumentException("Wszystkie pola muszą być wypełnione.");

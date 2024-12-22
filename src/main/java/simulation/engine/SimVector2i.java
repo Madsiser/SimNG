@@ -19,7 +19,7 @@ public class SimVector2i {
 
     public double distanceTo(SimVector2i other) {
         double dx = this.x - other.x;
-        double dy = this.y - other.y; // Poprawka: powinno być other.y
+        double dy = this.y - other.y;
         return Math.sqrt(dx * dx + dy * dy);
     }
 
@@ -38,7 +38,6 @@ public class SimVector2i {
         return "Vector2i{" + "x=" + x + ", y=" + y + '}';
     }
 
-    // Dodajemy metodę, aby uzyskać wszystkie kierunki
     public static List<SimVector2i> values() {
         return Arrays.asList(UP, DOWN, LEFT, RIGHT);
     }
