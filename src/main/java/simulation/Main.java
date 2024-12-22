@@ -9,6 +9,7 @@ import java.util.Random;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
+
         List<SimGroup> groups = new ArrayList<>();
 //        SimGroup group = new DeltaForce();
 //        groups.add(group);
