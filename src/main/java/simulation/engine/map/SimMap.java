@@ -26,7 +26,7 @@ public class SimMap {
     }
 
     public List<SimVector2i> calculateRoute(SimPosition startPosition, SimPosition stopPosition) {
-        //TODO "Implementation of A*
+        //TODO Implementation of A*
         return new ArrayList<>();
     }
 }

@@ -9,7 +9,7 @@ public class SimGroup extends SimExecutionScheduler {
     protected SimPosition position;
     private final String name;
     private final List<SimUnit> units = new ArrayList<>();
-    private final List<Command> commandQueue = new ArrayList<>();
+    private final List<Command> commandQueue = new ArrayList<>(); //TODO Implementation commands execution
     public List<SimGroup> visibleGroups = new ArrayList<>();
     protected Command currentOrder;
     protected LinkedList<SimVector2i> route = new LinkedList<>();
