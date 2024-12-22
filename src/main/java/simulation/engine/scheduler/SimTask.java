@@ -1,4 +1,4 @@
-package simulation.engine.processes;
+package simulation.engine.scheduler;
 
 public class SimTask {
 

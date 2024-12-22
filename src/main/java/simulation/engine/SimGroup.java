@@ -1,12 +1,11 @@
 package simulation.engine;
 
 import simulation.engine.commands.Command;
-import simulation.engine.processes.SimProcessAble;
-import simulation.engine.processes.SimTaskAble;
+import simulation.engine.scheduler.SimExecutionScheduler;
 
 import java.util.*;
 
-public class SimGroup extends SimProcessAble{
+public class SimGroup extends SimExecutionScheduler {
     protected SimPosition position;
     private final String name;
     private final List<SimUnit> units = new ArrayList<>();
