@@ -5,7 +5,7 @@ import simulation.engine.scheduler.SimExecutionScheduler;
 
 import java.util.*;
 
-public class SimGroup extends SimExecutionScheduler {
+public abstract class SimGroup extends SimExecutionScheduler {
     protected SimPosition position;
     private final String name;
     private final List<SimUnit> units = new ArrayList<>();
@@ -98,12 +98,9 @@ public class SimGroup extends SimExecutionScheduler {
 
     public final void updateVisibleGroups(List<SimGroup> visibleGroups) {
         this.visibleGroups = visibleGroups;
-        this.visibleGroups.forEach(this::notifyVisibility);
     }
 
-    protected final void notifyVisibility(SimGroup group) {
-//        System.out.println(this + " zauważył " + group);
-    }
+    public abstract void shot(SimBullet bullet);
 
     @Override
     public String toString() {

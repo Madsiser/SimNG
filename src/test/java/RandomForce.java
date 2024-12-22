@@ -41,7 +41,10 @@ public class RandomForce extends SimGroup {
 //        System.out.println(this.position);
     }
 
+    @Override
+    public void shot(SimBullet bullet) {
 
+    }
 
 
 }
