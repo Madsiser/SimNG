@@ -1,4 +1,4 @@
 package simulation.engine;
 
-public class SimBullet {
+public abstract class SimBullet {
 }

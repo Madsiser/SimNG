@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
-public class SimExecutionScheduler {
+public abstract class SimExecutionScheduler {
     protected final Map<String, SimProcess> processQueue = new HashMap<>();
 
     protected final LinkedList<SimTask> taskQueue = new LinkedList<>();

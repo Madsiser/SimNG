@@ -1,6 +1,6 @@
 package simulation.engine;
 
-public class SimUnit {
+public abstract class SimUnit {
     public Integer viewRange;
     public Integer shotRange;
     public Integer speed;
