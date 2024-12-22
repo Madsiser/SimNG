@@ -1,5 +1,3 @@
-package simulation;
-
 import simulation.engine.*;
 
 public class DeltaForce extends SimGroup {

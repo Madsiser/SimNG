@@ -1,5 +1,3 @@
-package simulation;
-
 import simulation.engine.SimForceType;
 import simulation.engine.SimGroup;
 import simulation.engine.SimPosition;

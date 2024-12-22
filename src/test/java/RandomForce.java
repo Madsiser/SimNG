@@ -1,5 +1,3 @@
-package simulation;
-
 import simulation.engine.*;
 
 import java.util.ArrayList;
