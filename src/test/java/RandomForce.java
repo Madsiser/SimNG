@@ -27,13 +27,13 @@ public class RandomForce extends SimGroup {
             this.route.add(randomDirection);
         }
 
-//        addProcess("move", this::move, random.nextInt()%10+1);
         addTask(this::move,1);
         addProcess("shot", this::shot, 5);
     }
 
     @Override
     public void move(){
+
         SimVector2i direction = route.poll();
         if (direction != null){
             this.position.add(direction);

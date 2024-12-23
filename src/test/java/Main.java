@@ -1,4 +1,5 @@
 import simulation.engine.*;
+import simulation.engine.map.SimMap;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -41,6 +42,8 @@ public class Main {
 
 
         SimCore simulation = new SimCore(groups);
+
+        simulation.setMap(new SimMap(MapGenerator.generate()));
 
         // Tworzenie okna
         JFrame frame = new JFrame("SimNG");

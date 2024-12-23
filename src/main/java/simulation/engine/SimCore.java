@@ -1,5 +1,6 @@
 package simulation.engine;
 
+import simulation.engine.map.SimMap;
 import simulation.engine.scheduler.SimExecutionScheduler;
 
 import java.util.ArrayList;
@@ -7,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class SimCore {
+    private SimMap map = null;
     private List<SimExecutionScheduler> simObjects = new ArrayList<>();
     private final List<SimGroup> groups;
     private final List<SimGroup> destroyedGroups = new ArrayList<>();
@@ -135,5 +137,13 @@ public class SimCore {
 
     public void addSimObjects(SimExecutionScheduler simObject) {
         this.simObjects.add(simObject);
+    }
+
+    public SimMap getMap() {
+        return map;
+    }
+
+    public void setMap(SimMap map) {
+        this.map = map;
     }
 }

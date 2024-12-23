@@ -25,6 +25,10 @@ public class SimPosition {
         return y;
     }
 
+    public int[] toArray(){
+        return new int[]{getX(), getY()};
+    }
+
     public double distanceTo(SimPosition other) {
         double dx = this.x - other.getX();
         double dy = this.y - other.getY();
