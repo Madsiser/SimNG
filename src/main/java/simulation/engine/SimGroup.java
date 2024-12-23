@@ -10,9 +10,8 @@ public abstract class SimGroup extends SimExecutionScheduler {
     private final String name;
     protected final List<SimUnit> units = new ArrayList<>();
     protected final List<SimUnit> destroyedUnits = new ArrayList<>();
-    protected final List<Command> commandQueue = new ArrayList<>(); //TODO Implementation commands execution
     protected List<SimGroup> visibleGroups = new ArrayList<>();
-    protected Command currentOrder;
+    public Command currentCommand = null; //TODO Implementation commands execution
     protected LinkedList<SimVector2i> route = new LinkedList<>();
     private final SimForceType forceType;
 
@@ -53,7 +52,7 @@ public abstract class SimGroup extends SimExecutionScheduler {
     }
 
     public void assignCommand(Command command) {
-        commandQueue.add(command);
+        this.currentCommand = command;
     }
 
     public Integer getViewRange(){

@@ -1,10 +1,13 @@
 package simulation.engine;
 
+import simulation.engine.scheduler.SimExecutionScheduler;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class SimCore {
+    private List<SimExecutionScheduler> simObjects = new ArrayList<>();
     private final List<SimGroup> groups;
     private final List<SimGroup> destroyedGroups = new ArrayList<>();
     private int currentStep = 0;
@@ -85,10 +88,11 @@ public class SimCore {
     }
 
     private void runStep(int currentStep){
+        for (SimExecutionScheduler simObject : simObjects) {
+            simObject.runStep(currentStep);
+        }
         for (SimGroup group : groups) {
             group.runStep(currentStep);
-            List<SimGroup> visibleGroups = getVisibleGroups(group);
-            group.updateVisibleGroups(visibleGroups);
         }
     }
     private void visibleStep(int currentStep){
@@ -127,5 +131,9 @@ public class SimCore {
 
     public void setTimeOfOneStep(int timeOfOneStep) {
         this.timeOfOneStep = timeOfOneStep;
+    }
+
+    public void addSimObjects(SimExecutionScheduler simObject) {
+        this.simObjects.add(simObject);
     }
 }
