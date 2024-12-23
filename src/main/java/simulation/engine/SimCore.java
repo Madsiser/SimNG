@@ -11,7 +11,7 @@ public class SimCore {
     private volatile boolean running = true;
     private Thread gameThread;
     private volatile boolean paused = false;
-    private final int TIMEOFONESTEP = 100;
+    private final int TIMEOFONESTEP = 10;
 
     public SimCore(List<SimGroup> groups) {
         this.groups = groups;

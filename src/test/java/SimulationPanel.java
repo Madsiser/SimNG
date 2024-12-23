@@ -22,32 +22,53 @@ public class SimulationPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        int maxGroupsToDisplay = Math.min(groups.size(), 1000000000);
-        for (int i = 0; i < maxGroupsToDisplay; i++) {
-            SimGroup group = groups.get(i);
+
+        // Ustal maksymalną liczbę grup do wyświetlenia
+        int maxGroupsToDisplay = groups.size(); // Użyj tylko rozmiaru listy
+
+        for (SimGroup group:groups) {
+//            SimGroup group = groups.get(i);
             SimPosition pos = group.getPosition();
             int rectWidth = 15;
             int rectHeight = 15;
 
+            // Ustaw kolor w zależności od typu siły
             if (group.getForceType() == SimForceType.REDFORCE) {
                 g.setColor(Color.RED);
             } else {
                 g.setColor(Color.BLUE);
             }
-            g.fillRect((int) pos.getX() * 20 - rectWidth / 2, (int) pos.getY() * 20 - rectHeight / 2, rectWidth, rectHeight);
-            g.drawString(group.getName(), (int) pos.getX() * 20 - 10, (int) pos.getY() * 20 - 10);
 
+            // Rysuj kwadracik
+            int x = (int) pos.getX() * 20 - rectWidth / 2;
+            int y = (int) pos.getY() * 20 - rectHeight / 2;
+            g.fillRect(x, y, rectWidth, rectHeight);
+
+            // Rysuj nazwę grupy
+            g.drawString(group.getName(), x - 10, y - 10);
+
+            // Ustaw kolor dla widocznych grup
             if (group.getVisibleGroups().isEmpty()) {
                 g.setColor(Color.GREEN);
             } else {
                 g.setColor(Color.BLUE);
             }
 
+            // Rysuj jednostki i ich informacje
             for (SimUnit unit : group.getUnits()) {
-                int range = unit.viewRange * 20 - 10;
+                int range = unit.getViewRange() * 20 - 10;
                 g.drawOval((int) pos.getX() * 20 - range, (int) pos.getY() * 20 - range, range * 2, range * 2);
+
+                // Rysuj nazwę jednostki i jej ilość
+                Color mem = g.getColor();
+                g.setColor(Color.BLACK);
+                String unitInfo = unit.getName() + " (" + unit.getAmount() + ")";
+                g.drawString(unitInfo, x - 10, y + rectHeight + 15); // Ustal pozycję tekstu
+                g.setColor(mem);
             }
         }
     }
+
+
 
 }
