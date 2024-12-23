@@ -29,6 +29,11 @@ public class DeltaForce extends SimGroup {
     }
 
     @Override
+    public void init() {
+
+    }
+
+    @Override
     public void move(){
         SimVector2i direction = route.poll();
         if (direction != null){

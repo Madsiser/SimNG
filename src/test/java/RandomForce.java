@@ -15,17 +15,23 @@ public class RandomForce extends SimGroup {
         SimUnit unit = new Abrams((random.nextInt()%3)+3,5,1,5);
         this.addUnit(unit);
 
-        List<SimVector2i> directions = new ArrayList<>();
-        directions.add(SimVector2i.UP);
-        directions.add(SimVector2i.DOWN);
-        directions.add(SimVector2i.LEFT);
-        directions.add(SimVector2i.RIGHT);
+//        List<SimVector2i> directions = new ArrayList<>();
+//        directions.add(SimVector2i.UP);
+//        directions.add(SimVector2i.DOWN);
+//        directions.add(SimVector2i.LEFT);
+//        directions.add(SimVector2i.RIGHT);
 
-        int length = 1000;
-        for (int i = 0; i < length; i++) {
-            SimVector2i randomDirection = directions.get(random.nextInt(directions.size()));
-            this.route.add(randomDirection);
-        }
+//        int length = 1000;
+//        for (int i = 0; i < length; i++) {
+//            SimVector2i randomDirection = directions.get(random.nextInt(directions.size()));
+//            this.route.add(randomDirection);
+//        }
+
+    }
+
+    @Override
+    public void init(){
+        this.route = calculateRouteTo(new SimPosition(10,10));
 
         addTask(this::move,1);
         addProcess("shot", this::shot, 5);

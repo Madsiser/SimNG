@@ -18,8 +18,13 @@ public class SimCore {
     private volatile boolean paused = false;
     private int timeOfOneStep = 100;
 
-    public SimCore(List<SimGroup> groups) {
-        this.groups = groups;
+    public SimCore() {
+        this.groups = new ArrayList<>();
+    }
+    public void addGroup(SimGroup group){
+        group.parent = this;
+        group.init();
+        this.groups.add(group);
     }
 
     public void stopSimulation() {

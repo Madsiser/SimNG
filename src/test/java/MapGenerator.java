@@ -1,12 +1,12 @@
 import java.util.Random;
 
 public class MapGenerator {
-    public static int[][] generate() {
-        int[][] grid = new int[100][100];
+    public static int[][] generate(int x, int y) {
+        int[][] grid = new int[x][y];
         Random random = new Random();
 
-        for (int i = 0; i < 100; i++) {
-            for (int j = 0; j < 100; j++) {
+        for (int i = 0; i < x; i++) {
+            for (int j = 0; j < y; j++) {
                 // Możesz dostosować zakres wartości, które chcesz umieścić w mapie
                 if (random.nextDouble() < 0.1) {
                     grid[i][j] = 5; // Przykładowa wartość specjalna

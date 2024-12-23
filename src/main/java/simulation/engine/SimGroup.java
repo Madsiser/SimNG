@@ -1,6 +1,7 @@
 package simulation.engine;
 
 import simulation.engine.commands.Command;
+import simulation.engine.map.SimMap;
 import simulation.engine.scheduler.SimExecutionScheduler;
 
 import java.util.*;
@@ -14,6 +15,7 @@ public abstract class SimGroup extends SimExecutionScheduler {
     public Command currentCommand = null; //TODO Implementation commands execution
     protected LinkedList<SimVector2i> route = new LinkedList<>();
     private final SimForceType forceType;
+    public SimCore parent = null;
 
     public SimGroup(String name, SimPosition position) {
         this.name = name;
@@ -25,6 +27,8 @@ public abstract class SimGroup extends SimExecutionScheduler {
         this.position = position;
         this.forceType = forceType;
     }
+
+    public abstract void init();
 
     public boolean isDestroyed(){
         return units.isEmpty();
@@ -114,6 +118,10 @@ public abstract class SimGroup extends SimExecutionScheduler {
 
     public final void updateVisibleGroups(List<SimGroup> visibleGroups) {
         this.visibleGroups = visibleGroups;
+    }
+
+    protected LinkedList<SimVector2i> calculateRouteTo(SimPosition target){
+        return parent.getMap().calculateRoute(position, target);
     }
 
     public abstract void apply_damage(SimGroup attacker, SimBullet bullet);

@@ -13,7 +13,7 @@ public class SimMap {
         this.map = map;
     }
 
-    public List<SimVector2i> calculateRoute(SimPosition startPosition, SimPosition stopPosition) {
+    public LinkedList<SimVector2i> calculateRoute(SimPosition startPosition, SimPosition stopPosition) {
         //TODO Implementation of A*
          return convertPathToDirections(aStarSearch(map,startPosition.toArray(), stopPosition.toArray()));
     }
@@ -76,8 +76,8 @@ public class SimMap {
         return row >= 0 && row < grid.length && col >= 0 && col < grid[0].length && grid[row][col] > 0;
     }
 
-    public static List<SimVector2i> convertPathToDirections(List<Node> path) {
-        List<SimVector2i> directions = new ArrayList<>();
+    public static LinkedList<SimVector2i> convertPathToDirections(List<Node> path) {
+        LinkedList<SimVector2i> directions = new LinkedList<>();
         for (int i = 1; i < path.size(); i++) { // Zaczynamy od drugiego elementu
             Node prev = path.get(i - 1);
             Node curr = path.get(i);
