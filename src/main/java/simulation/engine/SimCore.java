@@ -11,7 +11,7 @@ public class SimCore {
     private volatile boolean running = true;
     private Thread gameThread;
     private volatile boolean paused = false;
-    private final int TIMEOFONESTEP = 10;
+    private int timeOfOneStep = 100;
 
     public SimCore(List<SimGroup> groups) {
         this.groups = groups;
@@ -69,7 +69,7 @@ public class SimCore {
             clearanceStep(currentStep);
 
             long elapsedTime = System.currentTimeMillis() - startTime;
-            long sleepTime = TIMEOFONESTEP - elapsedTime;
+            long sleepTime = timeOfOneStep - elapsedTime;
 
             if (sleepTime > 0) {
                 try {
@@ -79,7 +79,7 @@ public class SimCore {
                     break;
                 }
             } else {
-                System.out.println("Przekroczono " + TIMEOFONESTEP + " ms w kroku: " + currentStep + " Czas wykonywania: " + elapsedTime + "ms");
+                System.out.println("Przekroczono " + timeOfOneStep + " ms w kroku: " + currentStep + " Czas wykonywania: " + elapsedTime + "ms");
             }
         }
     }
@@ -118,7 +118,14 @@ public class SimCore {
         return visibleGroups;
     }
 
+
+
+    //Getters and Setters
     public List<SimGroup> getGroups() {
         return groups;
+    }
+
+    public void setTimeOfOneStep(int timeOfOneStep) {
+        this.timeOfOneStep = timeOfOneStep;
     }
 }
