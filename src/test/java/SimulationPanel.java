@@ -29,7 +29,7 @@ public class SimulationPanel extends JPanel {
             int rectWidth = 15;
             int rectHeight = 15;
 
-            if (group.forceType == SimForceType.REDFORCE) {
+            if (group.getForceType() == SimForceType.REDFORCE) {
                 g.setColor(Color.RED);
             } else {
                 g.setColor(Color.BLUE);
@@ -37,7 +37,7 @@ public class SimulationPanel extends JPanel {
             g.fillRect((int) pos.getX() * 20 - rectWidth / 2, (int) pos.getY() * 20 - rectHeight / 2, rectWidth, rectHeight);
             g.drawString(group.getName(), (int) pos.getX() * 20 - 10, (int) pos.getY() * 20 - 10);
 
-            if (group.visibleGroups.isEmpty()) {
+            if (group.getVisibleGroups().isEmpty()) {
                 g.setColor(Color.GREEN);
             } else {
                 g.setColor(Color.BLUE);

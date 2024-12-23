@@ -6,14 +6,6 @@ public class Tank extends SimUnit{
         super(viewRange, shotRange, speed, amount);
     }
 
-    private void move() {
-        System.out.println("Zmiana pozycji...");
-    }
-
-    private void scan() {
-        System.out.println("Skanowanie otoczenia...");
-    }
-
     private void shoot() {
         System.out.println("Strzelanie!");
     }

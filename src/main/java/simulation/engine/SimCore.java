@@ -1,14 +1,17 @@
 package simulation.engine;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class SimCore {
     private final List<SimGroup> groups;
+    private final List<SimGroup> destroyedGroups = new ArrayList<>();
     private int currentStep = 0;
     private volatile boolean running = true;
     private Thread gameThread;
     private volatile boolean paused = false;
+    private final int TIMEOFONESTEP = 100;
 
     public SimCore(List<SimGroup> groups) {
         this.groups = groups;
@@ -45,7 +48,7 @@ public class SimCore {
         }
     }
 
-    public void runSimulation() {
+    private void runSimulation() {
         while (running) {
             if (paused) {
                 synchronized (this) {
@@ -60,16 +63,13 @@ public class SimCore {
 
             long startTime = System.currentTimeMillis();
             currentStep++;
-            // System.out.println("------------  " + currentStep + "  ------------");
 
-            for (SimGroup group : groups) {
-                group.runStep(currentStep);
-                List<SimGroup> visibleGroups = getVisibleGroups(group);
-                group.updateVisibleGroups(visibleGroups);
-            }
+            runStep(currentStep);
+            visibleStep(currentStep);
+            clearanceStep(currentStep);
 
             long elapsedTime = System.currentTimeMillis() - startTime;
-            long sleepTime = 100 - elapsedTime;
+            long sleepTime = TIMEOFONESTEP - elapsedTime;
 
             if (sleepTime > 0) {
                 try {
@@ -79,16 +79,39 @@ public class SimCore {
                     break;
                 }
             } else {
-                System.out.println("Przekroczono 100 ms w kroku: " + currentStep + " Czas wykonywania: " + elapsedTime + "ms");
+                System.out.println("Przekroczono " + TIMEOFONESTEP + " ms w kroku: " + currentStep + " Czas wykonywania: " + elapsedTime + "ms");
             }
         }
     }
 
+    private void runStep(int currentStep){
+        for (SimGroup group : groups) {
+            group.runStep(currentStep);
+            List<SimGroup> visibleGroups = getVisibleGroups(group);
+            group.updateVisibleGroups(visibleGroups);
+        }
+    }
+    private void visibleStep(int currentStep){
+        for (SimGroup group : groups) {
+            List<SimGroup> visibleGroups = getVisibleGroups(group);
+            group.updateVisibleGroups(visibleGroups);
+        }
+    }
+    private void clearanceStep(int currentStep){
+        Iterator<SimGroup> iterator = groups.iterator();
+        while (iterator.hasNext()) {
+            SimGroup group = iterator.next();
+            if (group.isDestroyed()){
+                destroyedGroups.add(group);
+                iterator.remove();
+            }
+        }
+    }
 
     private List<SimGroup> getVisibleGroups(SimGroup group) {
         List<SimGroup> visibleGroups = new ArrayList<>();
         for (SimGroup otherGroup : this.groups) {
-            if (!otherGroup.equals(group) && (otherGroup.forceType != group.forceType) && group.getViewRange()  > group.position.distanceTo(otherGroup.position)) {
+            if (!otherGroup.equals(group) && (otherGroup.getForceType() != group.getForceType()) && group.getViewRange()  > group.position.distanceTo(otherGroup.position)) {
                 visibleGroups.add(otherGroup);
             }
         }

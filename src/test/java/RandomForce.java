@@ -29,6 +29,7 @@ public class RandomForce extends SimGroup {
 
 //        addProcess("move", this::move, random.nextInt()%10+1);
         addTask(this::move,1);
+        addProcess("shot", this::shot, 5);
     }
 
     @Override
@@ -42,9 +43,24 @@ public class RandomForce extends SimGroup {
     }
 
     @Override
-    public void shot(SimBullet bullet) {
-
+    public void apply_damage(SimGroup attacker, SimBullet bullet) {
+        if (!units.isEmpty()) {
+            SimUnit unit = units.get(0);
+            unit.amount--;
+            units.set(0, unit);
+            this.cleanDestroyedUnits();
+        }
     }
 
+    public void shot(){
+        if(!visibleGroups.isEmpty()){
+            SimGroup group = visibleGroups.get(0);
+            for(SimUnit unit: units){
+                if (unit.inShotRange(group.getPosition())){
+                    group.apply_damage(this, new TankShell());
+                }
+            }
+        }
+    }
 
 }

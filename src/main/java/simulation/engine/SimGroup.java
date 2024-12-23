@@ -8,12 +8,13 @@ import java.util.*;
 public abstract class SimGroup extends SimExecutionScheduler {
     protected SimPosition position;
     private final String name;
-    private final List<SimUnit> units = new ArrayList<>();
-    private final List<Command> commandQueue = new ArrayList<>(); //TODO Implementation commands execution
-    public List<SimGroup> visibleGroups = new ArrayList<>();
+    protected final List<SimUnit> units = new ArrayList<>();
+    protected final List<SimUnit> destroyedUnits = new ArrayList<>();
+    protected final List<Command> commandQueue = new ArrayList<>(); //TODO Implementation commands execution
+    protected List<SimGroup> visibleGroups = new ArrayList<>();
     protected Command currentOrder;
     protected LinkedList<SimVector2i> route = new LinkedList<>();
-    public SimForceType forceType;
+    private final SimForceType forceType;
 
     public SimGroup(String name, SimPosition position) {
         this.name = name;
@@ -24,6 +25,10 @@ public abstract class SimGroup extends SimExecutionScheduler {
         this.name = name;
         this.position = position;
         this.forceType = forceType;
+    }
+
+    public boolean isDestroyed(){
+        return units.isEmpty();
     }
 
     public SimPosition getPosition() {
@@ -39,6 +44,7 @@ public abstract class SimGroup extends SimExecutionScheduler {
     }
 
     public void addUnit(SimUnit unit) {
+        unit.setParent(this);
         units.add(unit);
     }
 
@@ -93,14 +99,25 @@ public abstract class SimGroup extends SimExecutionScheduler {
         if (direction != null){
             this.position.add(direction);
         }
-//        System.out.println(this.position);
     }
+
+    protected void cleanDestroyedUnits() {
+        Iterator<SimUnit> iterator = units.iterator();
+        while (iterator.hasNext()) {
+            SimUnit unit = iterator.next();
+            if (unit.isDestroyed()) {
+                destroyedUnits.add(unit);
+                iterator.remove();
+            }
+        }
+    }
+
 
     public final void updateVisibleGroups(List<SimGroup> visibleGroups) {
         this.visibleGroups = visibleGroups;
     }
 
-    public abstract void shot(SimBullet bullet);
+    public abstract void apply_damage(SimGroup attacker, SimBullet bullet);
 
     @Override
     public String toString() {
@@ -108,5 +125,13 @@ public abstract class SimGroup extends SimExecutionScheduler {
                 "name='" + name + '\'' +
                 ", pos=" + position +
                 '}';
+    }
+
+    public SimForceType getForceType() {
+        return forceType;
+    }
+
+    public List<SimGroup> getVisibleGroups() {
+        return visibleGroups;
     }
 }

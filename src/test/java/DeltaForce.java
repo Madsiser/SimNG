@@ -39,7 +39,7 @@ public class DeltaForce extends SimGroup {
     }
 
     @Override
-    public void shot(SimBullet bullet) {
+    public void apply_damage(SimGroup self, SimBullet bullet) {
 
     }
 
