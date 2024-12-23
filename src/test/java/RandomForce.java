@@ -1,4 +1,5 @@
 import simulation.engine.*;
+import simulation.engine.map.Node;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ public class RandomForce extends SimGroup {
 
     @Override
     public void init(){
-        this.route = calculateRouteTo(new SimPosition(10,10));
+        this.route = calculateRouteTo(new SimPosition(20,20));
 
         addTask(this::move,1);
         addProcess("shot", this::shot, 5);
@@ -59,7 +60,7 @@ public class RandomForce extends SimGroup {
     }
 
     public void shot(){
-        if(!visibleGroups.isEmpty()){
+        if(!visibleGroups.isEmpty() && false){
             SimGroup group = visibleGroups.get(0);
             for(SimUnit unit: units){
                 if (unit.inShotRange(group.getPosition())){

@@ -14,8 +14,8 @@ public class SimMap {
     }
 
     public LinkedList<SimVector2i> calculateRoute(SimPosition startPosition, SimPosition stopPosition) {
-        //TODO Implementation of A*
-         return convertPathToDirections(aStarSearch(map,startPosition.toArray(), stopPosition.toArray()));
+        List<Node> path = aStarSearch(map,startPosition.toArray(), stopPosition.toArray());
+         return convertPathToDirections(path);
     }
 
     private static final int[][] DIRECTIONS = {
@@ -78,20 +78,20 @@ public class SimMap {
 
     public static LinkedList<SimVector2i> convertPathToDirections(List<Node> path) {
         LinkedList<SimVector2i> directions = new LinkedList<>();
-        for (int i = 1; i < path.size(); i++) { // Zaczynamy od drugiego elementu
+        for (int i = 1; i < path.size(); i++) {
             Node prev = path.get(i - 1);
             Node curr = path.get(i);
 
             int dRow = curr.row - prev.row;
             int dCol = curr.col - prev.col;
 
-            if (dRow == -1 && dCol == 0) {
+            if (dRow == 0 && dCol == -1) {
                 directions.add(SimVector2i.UP);
-            } else if (dRow == 1 && dCol == 0) {
-                directions.add(SimVector2i.DOWN);
-            } else if (dRow == 0 && dCol == -1) {
-                directions.add(SimVector2i.LEFT);
             } else if (dRow == 0 && dCol == 1) {
+                directions.add(SimVector2i.DOWN);
+            } else if (dRow == -1 && dCol == 0) {
+                directions.add(SimVector2i.LEFT);
+            } else if (dRow == 1 && dCol == 0) {
                 directions.add(SimVector2i.RIGHT);
             }
         }

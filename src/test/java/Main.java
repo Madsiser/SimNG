@@ -12,14 +12,14 @@ public class Main {
         SimCore simulation = new SimCore();
         simulation.setMap(new SimMap(MapGenerator.generate(501,501)));
 
-        simulation.addGroup(new RandomForce("Alpha Force", new SimPosition(12, 12), SimForceType.BLUFORCE));
-        simulation.addGroup(new RandomForce("Bravo Force", new SimPosition(15, 15), SimForceType.BLUFORCE));
+//        simulation.addGroup(new RandomForce("Alpha Force", new SimPosition(12, 12), SimForceType.BLUFORCE));
+//        simulation.addGroup(new RandomForce("Bravo Force", new SimPosition(15, 15), SimForceType.BLUFORCE));
         simulation.addGroup(new RandomForce("Charlie Force", new SimPosition(20, 20), SimForceType.BLUFORCE));
         simulation.addGroup(new RandomForce("Echo Force", new SimPosition(25, 13), SimForceType.BLUFORCE));
         simulation.addGroup(new RandomForce("Foxtrot Force", new SimPosition(13, 25), SimForceType.REDFORCE));
         simulation.addGroup(new RandomForce("Golf Force", new SimPosition(27, 15), SimForceType.REDFORCE));
         simulation.addGroup(new RandomForce("Hotel Force", new SimPosition(15, 27), SimForceType.REDFORCE));
-        simulation.addGroup(new RandomForce("India Force", new SimPosition(22, 22), SimForceType.REDFORCE));
+//        simulation.addGroup(new RandomForce("India Force", new SimPosition(22, 22), SimForceType.REDFORCE));
 
 
 //        Random random = new Random();
