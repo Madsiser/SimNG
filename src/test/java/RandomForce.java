@@ -32,7 +32,7 @@ public class RandomForce extends SimGroup {
 
     @Override
     public void init(){
-        this.route = calculateRouteTo(new SimPosition(20,20));
+        this.route = calculateRouteTo(new SimPosition(2,2));
 
         addTask(this::move,1);
         addProcess("shot", this::shot, 5);
@@ -60,7 +60,7 @@ public class RandomForce extends SimGroup {
     }
 
     public void shot(){
-        if(!visibleGroups.isEmpty() && false){
+        if(!visibleGroups.isEmpty()){
             SimGroup group = visibleGroups.get(0);
             for(SimUnit unit: units){
                 if (unit.inShotRange(group.getPosition())){

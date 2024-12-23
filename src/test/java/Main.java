@@ -22,19 +22,19 @@ public class Main {
 //        simulation.addGroup(new RandomForce("India Force", new SimPosition(22, 22), SimForceType.REDFORCE));
 
 
-//        Random random = new Random();
-//
-//        for (int i = 1; i <= 100; i++) {
-//            int x = random.nextInt(501); // Losowa wartość x w zakresie 0-500
-//            int y = random.nextInt(501); // Losowa wartość y w zakresie 0-500
-//            simulation.addGroup(new RandomForce("Ally " + i, new SimPosition(x, y), SimForceType.BLUFORCE));
-//        }
-//
-//        for (int i = 1; i <= 100; i++) {
-//            int x = random.nextInt(501); // Losowa wartość x w zakresie 0-500
-//            int y = random.nextInt(501); // Losowa wartość y w zakresie 0-500
-//            simulation.addGroup(new RandomForce("Enemy " + i, new SimPosition(x, y), SimForceType.REDFORCE));
-//        }
+        Random random = new Random(10);
+
+        for (int i = 1; i <= 100; i++) {
+            int x = random.nextInt(200); // Losowa wartość x w zakresie 0-500
+            int y = random.nextInt(200); // Losowa wartość y w zakresie 0-500
+            simulation.addGroup(new RandomForce("Ally " + i, new SimPosition(x, y), SimForceType.BLUFORCE));
+        }
+
+        for (int i = 1; i <= 100; i++) {
+            int x = random.nextInt(200); // Losowa wartość x w zakresie 0-500
+            int y = random.nextInt(200); // Losowa wartość y w zakresie 0-500
+            simulation.addGroup(new RandomForce("Enemy " + i, new SimPosition(x, y), SimForceType.REDFORCE));
+        }
 
         // Tworzenie okna
         JFrame frame = new JFrame("SimNG");
