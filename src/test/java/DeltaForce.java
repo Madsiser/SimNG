@@ -6,7 +6,7 @@ public class DeltaForce extends SimGroup {
         super("Delta Force", new SimPosition(20,20));
 
 
-        SimUnit unit = new Abrams(7,6,1,5);
+        SimUnit unit = new Abrams(5);
         this.addUnit(unit);
 
         this.route.add(SimVector2i.RIGHT);

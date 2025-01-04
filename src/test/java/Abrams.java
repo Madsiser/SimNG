@@ -2,8 +2,8 @@ import simulation.engine.SimUnit;
 
 public class Abrams extends SimUnit{
 
-    public Abrams(Integer viewRange, Integer shotRange, Integer speed, Integer amount) {
-        super("Abrams", viewRange, shotRange, speed, amount);
+    public Abrams(int amount) {
+        super("Abrams", 5, 2, 4, amount);
     }
 
     private void shoot() {

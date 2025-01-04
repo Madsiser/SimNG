@@ -13,7 +13,7 @@ public class RandomForce extends SimGroup {
         super(name, position, forceType);
 
 
-        SimUnit unit = new Abrams((random.nextInt()%3)+3,5,1,5);
+        SimUnit unit = new Abrams(5);
         this.addUnit(unit);
 
 //        List<SimVector2i> directions = new ArrayList<>();

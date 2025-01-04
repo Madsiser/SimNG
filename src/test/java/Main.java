@@ -2,7 +2,6 @@ import simulation.engine.*;
 import simulation.engine.map.SimMap;
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
