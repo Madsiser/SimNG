@@ -1,4 +1,4 @@
-package simulation.engine.map;
+package pl.simNG.map;
 
 public class Node implements Comparable<Node> {
     public int row, col;

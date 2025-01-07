@@ -1,4 +1,4 @@
-import simulation.engine.*;
+import pl.simNG.*;
 
 public class DeltaForce extends SimGroup {
 

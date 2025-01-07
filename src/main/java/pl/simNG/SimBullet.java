@@ -1,4 +1,4 @@
-package simulation.engine;
+package pl.simNG;
 
 public abstract class SimBullet {
 }

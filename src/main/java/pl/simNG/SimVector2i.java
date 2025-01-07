@@ -1,4 +1,4 @@
-package simulation.engine;
+package pl.simNG;
 
 import java.util.Arrays;
 import java.util.List;

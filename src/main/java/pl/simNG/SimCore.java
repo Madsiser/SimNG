@@ -1,7 +1,7 @@
-package simulation.engine;
+package pl.simNG;
 
-import simulation.engine.map.SimMap;
-import simulation.engine.scheduler.SimExecutionScheduler;
+import pl.simNG.map.SimMap;
+import pl.simNG.scheduler.SimExecutionScheduler;
 
 import java.util.ArrayList;
 import java.util.Iterator;

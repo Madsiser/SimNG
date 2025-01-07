@@ -1,5 +1,8 @@
-import simulation.engine.*;
-import simulation.engine.map.SimMap;
+import pl.simNG.SimCore;
+import pl.simNG.SimForceType;
+import pl.simNG.SimGroup;
+import pl.simNG.SimPosition;
+import pl.simNG.map.SimMap;
 
 import javax.swing.*;
 import java.util.List;

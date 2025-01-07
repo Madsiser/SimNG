@@ -1,8 +1,5 @@
-import simulation.engine.*;
-import simulation.engine.map.Node;
+import pl.simNG.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class RandomForce extends SimGroup {

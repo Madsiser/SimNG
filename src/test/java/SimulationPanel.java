@@ -1,7 +1,7 @@
-import simulation.engine.SimForceType;
-import simulation.engine.SimGroup;
-import simulation.engine.SimPosition;
-import simulation.engine.SimUnit;
+import pl.simNG.SimForceType;
+import pl.simNG.SimGroup;
+import pl.simNG.SimPosition;
+import pl.simNG.SimUnit;
 
 import javax.swing.*;
 import java.awt.*;

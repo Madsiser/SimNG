@@ -1,4 +1,4 @@
-package simulation.engine.commands;
+package pl.simNG.commands;
 
 public record Command(CommandType type, Object data) {
 

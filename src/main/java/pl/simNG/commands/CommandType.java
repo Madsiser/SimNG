@@ -1,4 +1,4 @@
-package simulation.engine.commands;
+package pl.simNG.commands;
 
 public enum CommandType {
     MOVE,

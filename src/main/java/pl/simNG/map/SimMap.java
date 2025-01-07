@@ -1,7 +1,7 @@
-package simulation.engine.map;
+package pl.simNG.map;
 
-import simulation.engine.SimPosition;
-import simulation.engine.SimVector2i;
+import pl.simNG.SimPosition;
+import pl.simNG.SimVector2i;
 
 import java.util.*;
 

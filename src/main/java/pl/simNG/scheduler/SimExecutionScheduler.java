@@ -1,4 +1,4 @@
-package simulation.engine.scheduler;
+package pl.simNG.scheduler;
 
 import java.util.HashMap;
 import java.util.Iterator;

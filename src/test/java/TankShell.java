@@ -1,4 +1,4 @@
-import simulation.engine.SimBullet;
+import pl.simNG.SimBullet;
 
 public class TankShell extends SimBullet {
 }

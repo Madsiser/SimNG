@@ -1,7 +1,7 @@
-package simulation.engine.commands;
+package pl.simNG.commands;
 
-import simulation.engine.SimGroup;
-import simulation.engine.scheduler.SimExecutionScheduler;
+import pl.simNG.SimGroup;
+import pl.simNG.scheduler.SimExecutionScheduler;
 
 import java.util.ArrayList;
 import java.util.List;

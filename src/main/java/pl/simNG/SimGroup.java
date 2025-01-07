@@ -1,8 +1,7 @@
-package simulation.engine;
+package pl.simNG;
 
-import simulation.engine.commands.Command;
-import simulation.engine.map.SimMap;
-import simulation.engine.scheduler.SimExecutionScheduler;
+import pl.simNG.commands.Command;
+import pl.simNG.scheduler.SimExecutionScheduler;
 
 import java.util.*;
 
