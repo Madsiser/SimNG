@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>pl.sim</groupId>
-    <artifactId>SimNGjava</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>SimNG</artifactId>
+    <version>1.0</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
