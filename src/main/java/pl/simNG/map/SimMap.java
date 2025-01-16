@@ -14,7 +14,7 @@ public class SimMap {
     }
 
     public LinkedList<SimVector2i> calculateRoute(SimPosition startPosition, SimPosition stopPosition) {
-        List<Node> path = aStarSearch(map,startPosition.toArray(), stopPosition.toArray());
+        List<Node> path = aStarSearch(map,startPosition.toIntArray(), stopPosition.toIntArray());
          return convertPathToDirections(path);
     }
 

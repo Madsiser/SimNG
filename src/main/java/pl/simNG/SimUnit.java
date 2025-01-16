@@ -104,8 +104,8 @@ public abstract class SimUnit {
     }
 
     //Setters
-    public void setInitialUnits(Integer initialUnits) {
-        this.initialUnits = initialUnits;
+    public void setActiveUnits(Integer initialUnits) {
+        this.activeUnits = initialUnits;
     }
 
     //Getters

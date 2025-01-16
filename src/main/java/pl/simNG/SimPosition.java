@@ -1,38 +1,32 @@
 package pl.simNG;
 
 public class SimPosition {
-    private Integer x;
-    private Integer y;
+    private double x;
+    private double y;
 
-    public SimPosition(Integer x, Integer y) {
+    public SimPosition(double x, double y) {
         this.x = x;
         this.y = y;
     }
 
-    public void setY(Integer y) {
-        this.y = y;
-    }
-
-    public void setX(Integer x) {
-        this.x = x;
-    }
-
-    public Integer getX() {
+    public double getX() {
         return x;
     }
 
-    public Integer getY() {
+    public double getY() {
         return y;
     }
 
-    public int[] toArray(){
-        return new int[]{getX(), getY()};
+    public double[] toArray(){
+        return new double[]{getX(), getY()};
+    }
+
+    public int[] toIntArray() {
+        return new int[]{(int) Math.round(this.x), (int) Math.round(this.y)};
     }
 
     public double distanceTo(SimPosition other) {
-        double dx = this.x - other.getX();
-        double dy = this.y - other.getY();
-        return Math.sqrt(dx * dx + dy * dy);
+        return Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2));
     }
 
     public void add(SimPosition position) {
@@ -43,13 +37,13 @@ public class SimPosition {
         this.x += vector2i.x;
         this.y += vector2i.y;
     }
-    public void add(Integer x, Integer y) {
-        this.x += x;
-        this.y += y;
+    public void add(double dx, double dy) {
+        this.x += dx;
+        this.y += dy;
     }
 
     @Override
     public String toString() {
-        return "Position{" + "x=" + x + ", y=" + y + '}';
+        return String.format("(%.2f, %.2f)", x, y);
     }
 }

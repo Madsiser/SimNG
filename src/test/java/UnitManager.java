@@ -5,7 +5,7 @@ public class UnitManager {
     // Klasa Abrams
     public static class Abrams extends SimUnit {
         public Abrams(int initialUnits) {
-            super("Abrams", "tank", 10, 5, 3, initialUnits, 50, 0.9, 0.2, 1.0);
+            super("Abrams", "tank", 10, 5, 1, initialUnits, 50, 0.9, 0.2, 1.0);
         }
     }
 

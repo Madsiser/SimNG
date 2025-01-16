@@ -36,20 +36,20 @@ public class RandomForce extends SimGroup {
 
     @Override
     public void move(){
-
+        int groupSpeed = getSpeed();
         SimVector2i direction = route.poll();
         if (direction != null){
             this.position.add(direction);
-            addTask(this::move,(random.nextInt()%5)+5);
+            addTask(this::move,groupSpeed);
         }
 //        System.out.println(this.position);
     }
 
     @Override
-    public void apply_damage(SimGroup attacker, SimBullet bullet) {
+    public void apply_damage(SimGroup attacker) {
         if (!units.isEmpty()) {
             SimUnit unit = units.get(0);
-            unit.setInitialUnits(unit.getInitialUnits()-1);
+            unit.setActiveUnits(unit.getActiveUnits()-1);
             units.set(0, unit);
             this.cleanDestroyedUnits();
         }
@@ -60,7 +60,7 @@ public class RandomForce extends SimGroup {
             SimGroup group = visibleGroups.get(0);
             for(SimUnit unit: units){
                 if (unit.inShotRange(group.getPosition())){
-                    group.apply_damage(this, new TankShell());
+                    group.apply_damage(this);
                 }
             }
         }
