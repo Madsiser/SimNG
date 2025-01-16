@@ -108,6 +108,10 @@ public abstract class SimUnit {
         this.activeUnits = initialUnits;
     }
 
+    public void setCurrentAmmunition(Integer initialAmmunition) {
+        this.currentAmmunition = initialAmmunition;
+    }
+
     //Getters
     public String getName() {
         return name;
