@@ -9,7 +9,6 @@ public class RandomForce extends SimGroup {
     public RandomForce(String name, SimPosition position, SimForceType forceType) {
         super(name, position, forceType);
 
-
         SimUnit unit = new Abrams(5);
         this.addUnit(unit);
 
@@ -50,7 +49,7 @@ public class RandomForce extends SimGroup {
     public void apply_damage(SimGroup attacker, SimBullet bullet) {
         if (!units.isEmpty()) {
             SimUnit unit = units.get(0);
-            unit.setAmount(unit.getAmount()-1);
+            unit.setInitialUnits(unit.getInitialUnits()-1);
             units.set(0, unit);
             this.cleanDestroyedUnits();
         }
