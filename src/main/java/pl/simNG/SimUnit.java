@@ -103,6 +103,11 @@ public abstract class SimUnit {
         }
     }
 
+    //Setters
+    public void setInitialUnits(Integer initialUnits) {
+        this.initialUnits = initialUnits;
+    }
+
     //Getters
     public String getName() {
         return name;

@@ -9,7 +9,7 @@ public class RandomForce extends SimGroup {
     public RandomForce(String name, SimPosition position, SimForceType forceType) {
         super(name, position, forceType);
 
-        SimUnit unit = new Abrams(5);
+        SimUnit unit = new UnitManager.Abrams(5);
         this.addUnit(unit);
 
 //        List<SimVector2i> directions = new ArrayList<>();
