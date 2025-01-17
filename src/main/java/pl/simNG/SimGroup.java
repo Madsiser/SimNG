@@ -113,7 +113,7 @@ public abstract class SimGroup extends SimExecutionScheduler {
         return parent.getMap().calculateRoute(position, target);
     }
 
-    public abstract void apply_damage(SimGroup attacker);
+    public abstract void applyDamage(SimGroup attacker, SimUnit targetUnit);
 
     @Override
     public String toString() {
