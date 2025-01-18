@@ -30,8 +30,10 @@ public class SimVector2d {
     }
 
     public SimVector2d scale(double factor) {
-        return new SimVector2d(this.x * factor, this.y * factor);
+        return new SimVector2d(Math.round(this.x * factor * 100) / 100.0,
+                Math.round(this.y * factor * 100) / 100.0);
     }
+
 
     public SimVector2d add(SimVector2d other) {
         return new SimVector2d(this.x + other.x, this.y + other.y);
