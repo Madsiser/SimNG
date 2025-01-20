@@ -104,7 +104,6 @@ public abstract class SimGroup extends SimExecutionScheduler {
         }
     }
 
-
     public final void updateVisibleGroups(List<SimGroup> visibleGroups) {
         this.visibleGroups = visibleGroups;
     }

@@ -1,5 +1,7 @@
 package pl.simNG;
 
+import java.util.Random;
+
 public abstract class SimUnit {
     protected String name;
     protected String type;
@@ -10,15 +12,18 @@ public abstract class SimUnit {
     protected Integer activeUnits;
     protected Integer initialAmmunition;
     protected Integer currentAmmunition;
-    protected double hitProbabilityBase;
-    protected double destructionProbabilityBase;
+    protected double hitProbabilityMin;
+    protected double hitProbabilityMax;
+    protected double destructionProbabilityMin;
+    protected double destructionProbabilityMax;
     protected double fireIntensity;
     protected double criticalLevel;
 
     private SimGroup parent = null;
+    Random random = new Random();
 
-    public SimUnit(String name, String type, Integer viewRange, Integer shotRange, Integer speed, Integer initialUnits, Integer initialAmmunition, double hitProbabilityBase, double destructionProbabilityBase, double fireIntensity) {
-        if (name == null || type == null || viewRange == null || shotRange == null || speed == null || initialUnits == null) {
+    public SimUnit(String name, String type, Integer viewRange, Integer shotRange, Integer speed, Integer initialUnits, Integer initialAmmunition, double hitProbabilityMin, double hitProbabilityMax, double destructionProbabilityMin , double destructionProbabilityMax, double fireIntensity) {
+        if (name == null || type == null || viewRange == null || shotRange == null || speed == null || initialUnits == null || initialAmmunition == null ) {
             throw new IllegalArgumentException("Wszystkie pola muszą być wypełnione.");
         }
         this.name = name;
@@ -30,8 +35,10 @@ public abstract class SimUnit {
         this.activeUnits = initialUnits;
         this.initialAmmunition = initialAmmunition;
         this.currentAmmunition = initialAmmunition;
-        this.hitProbabilityBase = hitProbabilityBase;
-        this.destructionProbabilityBase = destructionProbabilityBase;
+        this.hitProbabilityMin = hitProbabilityMin;
+        this.hitProbabilityMax = hitProbabilityMax;
+        this.destructionProbabilityMin = destructionProbabilityMin;
+        this.destructionProbabilityMax = destructionProbabilityMax;
         this.fireIntensity = fireIntensity;
         this.criticalLevel = 0.3;
     }
@@ -42,8 +49,7 @@ public abstract class SimUnit {
 
     //Jednostka zostaje zniszczona
     public boolean isDestroyed() {
-        double completionRate = (double) activeUnits / initialUnits;
-        return activeUnits <= 0 || completionRate < criticalLevel;
+        return activeUnits <= 0;
     }
 
     //Sprawdza, czy podana pozycja znajduje się w zasięgu strzału jednostki
@@ -59,6 +65,7 @@ public abstract class SimUnit {
     //Prawdopodobieństwo trafienia
     public double calculateHitProbability(String targetType, double distance) {
         double targetSizeModifier = getTargetSizeModifier(targetType);
+        double hitProbabilityBase = hitProbabilityMin + random.nextDouble() * (hitProbabilityMax - hitProbabilityMin);
         double distanceFactor = 1.0 / (1.0 + distance / shotRange);
         double hitProbability = hitProbabilityBase * targetSizeModifier * distanceFactor;
         return Math.max(0.0, Math.min(1.0, hitProbability));
@@ -81,8 +88,12 @@ public abstract class SimUnit {
     }
 
     //Prawdopodobieństwo zniszczenia celu pod warunkiem trafienia
-    public double calculateDestructionProbability(String targetType) {
+    public double calculateDestructionProbability(SimUnit attacker, String targetType) {
         double destructionModifier = getDestructionModifier(targetType);
+
+        double destructionProbabilityBase = attacker.getDestructionProbabilityMin() +
+                random.nextDouble() * (attacker.getDestructionProbabilityMax() - attacker.getDestructionProbabilityMin());
+
         double destructionProbability = destructionProbabilityBase * destructionModifier;
         return Math.max(0.0, Math.min(1.0, destructionProbability));
     }
@@ -149,12 +160,20 @@ public abstract class SimUnit {
         return currentAmmunition;
     }
 
-    public double getHitProbabilityBase() {
-        return hitProbabilityBase;
+    public double getHitProbabilityMin() {
+        return hitProbabilityMin;
     }
 
-    public double getDestructionProbabilityBase() {
-        return destructionProbabilityBase;
+    public double getHitProbabilityMax() {
+        return hitProbabilityMax;
+    }
+
+    public double getDestructionProbabilityMin() {
+        return destructionProbabilityMin;
+    }
+
+    public double getDestructionProbabilityMax() {
+        return destructionProbabilityMax;
     }
 
     public double getFireIntensity() {
