@@ -27,14 +27,14 @@ public class SimMap {
             for (SimPosition recoPoint : recoPath) {
                 SimPosition bestRecoPoint = findBestAround(recoPoint);
 
-                List<Node> pathSegment = aStarSearch(map, currentPosition.toArray(), bestRecoPoint.toArray());
+                List<Node> pathSegment = aStarSearch(map, currentPosition.toIntArray(), bestRecoPoint.toIntArray());
                 fullPath.addAll(pathSegment);
 
                 currentPosition = bestRecoPoint;
             }
         }
 
-        List<Node> lastPathSegment = aStarSearch(map, currentPosition.toArray(), stopPosition.toArray());
+        List<Node> lastPathSegment = aStarSearch(map, currentPosition.toIntArray(), stopPosition.toIntArray());
         fullPath.addAll(lastPathSegment);
 
         return fullPath;
@@ -42,8 +42,8 @@ public class SimMap {
 
     // parametry do testow pozniej wyrzucic
     private SimPosition findBestAround(SimPosition recoPoint) {
-        int x = recoPoint.getX();
-        int y = recoPoint.getY();
+        int x = (int) recoPoint.getX();
+        int y = (int) recoPoint.getY();
         int n = map.length;
 
         int bestX = x;

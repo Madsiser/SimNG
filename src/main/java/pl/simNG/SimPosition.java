@@ -17,6 +17,14 @@ public class SimPosition {
         return y;
     }
 
+    public void setX(int x) {
+        this.x = (double) x;
+    }
+
+    public void setY(int y) {
+        this.y = (double) y;
+    }
+
     public double[] toArray(){
         return new double[]{getX(), getY()};
     }
@@ -46,4 +54,5 @@ public class SimPosition {
     public String toString() {
         return String.format("(%.2f, %.2f)", x, y);
     }
+
 }
