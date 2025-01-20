@@ -75,11 +75,21 @@ public abstract class SimGroup extends SimExecutionScheduler {
         return maxViewRange;
     }
 
-    public int getSpeed() {
-        return units.stream()
-                .map(SimUnit::getSpeed) // Pobierz szybkość każdej jednostki
-                .min(Integer::compareTo) // Znajdź najmniejszą wartość
-                .orElse(1); // Domyślnie 1, jeśli brak jednostek
+    public Integer getSpeed(){
+        Integer minViewRange = Integer.MAX_VALUE;
+
+        for (SimUnit unit : units) {
+            Integer currentViewRange = unit.viewRange;
+            if (currentViewRange < minViewRange) {
+                minViewRange = currentViewRange;
+            }
+        }
+
+        if (minViewRange == Integer.MAX_VALUE) {
+            return -1;
+        }
+
+        return minViewRange;
     }
 
     public List<SimUnit> getUnits() {
@@ -104,6 +114,7 @@ public abstract class SimGroup extends SimExecutionScheduler {
         }
     }
 
+
     public final void updateVisibleGroups(List<SimGroup> visibleGroups) {
         this.visibleGroups = visibleGroups;
     }
@@ -112,7 +123,7 @@ public abstract class SimGroup extends SimExecutionScheduler {
         return parent.getMap().calculateRoute(position, target);
     }
 
-    public abstract void applyDamage(SimGroup attacker, SimUnit targetUnit);
+    public abstract void apply_damage(SimGroup attacker, SimBullet bullet);
 
     @Override
     public String toString() {

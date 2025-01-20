@@ -151,8 +151,4 @@ public class SimCore {
     public void setMap(SimMap map) {
         this.map = map;
     }
-
-    public int getSimulationTime() {
-        return currentStep;
-    }
 }
