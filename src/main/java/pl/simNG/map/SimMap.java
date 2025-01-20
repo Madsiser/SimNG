@@ -18,6 +18,57 @@ public class SimMap {
          return convertPathToDirections(path);
     }
 
+    // parametry do testow pozniej wyrzucic
+    public List<Node> calculateRoute(SimPosition startPosition, SimPosition stopPosition, SimPosition... recoPath) {
+        List<Node> fullPath = new ArrayList<>();
+        SimPosition currentPosition = startPosition;
+
+        if (recoPath != null) {
+            for (SimPosition recoPoint : recoPath) {
+                SimPosition bestRecoPoint = findBestAround(recoPoint);
+
+                List<Node> pathSegment = aStarSearch(map, currentPosition.toArray(), bestRecoPoint.toArray());
+                fullPath.addAll(pathSegment);
+
+                currentPosition = bestRecoPoint;
+            }
+        }
+
+        List<Node> lastPathSegment = aStarSearch(map, currentPosition.toArray(), stopPosition.toArray());
+        fullPath.addAll(lastPathSegment);
+
+        return fullPath;
+    }
+
+    // parametry do testow pozniej wyrzucic
+    private SimPosition findBestAround(SimPosition recoPoint) {
+        int x = recoPoint.getX();
+        int y = recoPoint.getY();
+        int n = map.length;
+
+        int bestX = x;
+        int bestY = y;
+        int bestValue = map[x][y];
+
+        for (int i = x - 3; i <= x + 3 ; i++) {
+            for (int j = y - 3; j <= y + 3 ; j++) {
+                if (i >= 0 && i < n && j>= 0 && j < map[0].length) {
+                    if (map[i][j] != 0 && map[i][j] < bestValue) {
+                        bestValue = map[i][j];
+                        bestX = i;
+                        bestY = j;
+                    }
+                }
+            }
+        }
+
+        recoPoint.setX(bestX);
+        recoPoint.setY(bestY);
+        System.out.println("bestX: " + bestX + " bestY: " + bestY);
+
+        return recoPoint;
+    }
+
     private static final int[][] DIRECTIONS = {
             {1, 0}, {0, 1}, {-1, 0}, {0, -1}, // N/S/E/W
             //{1, 1}, {1, -1}, {-1, 1}, {-1, -1} // Diagonals
