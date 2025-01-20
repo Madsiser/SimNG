@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SimVector2i {
-    public Integer x;
-    public Integer y;
+    public int x;
+    public int y;
 
     public static final SimVector2i UP = new SimVector2i(0, -1);
     public static final SimVector2i DOWN = new SimVector2i(0, 1);
@@ -15,6 +15,19 @@ public class SimVector2i {
     public SimVector2i(Integer x, Integer y) {
         this.x = x;
         this.y = y;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public SimVector2i(double x, double y) {
+        this.x = (int) Math.round(x);
+        this.y = (int) Math.round(y);
     }
 
     public double distanceTo(SimVector2i other) {

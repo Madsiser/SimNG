@@ -62,7 +62,7 @@ public class SimulationPanel extends JPanel {
                 // Rysuj nazwę jednostki i jej ilość
                 Color mem = g.getColor();
                 g.setColor(Color.BLACK);
-                String unitInfo = unit.getName() + " (" + unit.getAmount() + ")";
+                String unitInfo = unit.getName() + " (" + unit.getInitialUnits() + ")";
                 g.drawString(unitInfo, x - 10, y + rectHeight + 15); // Ustal pozycję tekstu
                 g.setColor(mem);
             }
