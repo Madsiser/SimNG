@@ -1,5 +1,7 @@
 package pl.simNG;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public abstract class SimUnit {
@@ -8,10 +10,11 @@ public abstract class SimUnit {
     protected Integer viewRange;
     protected Integer shotRange;
     protected Integer speed;
+
     protected Integer initialUnits;
     protected Integer activeUnits;
-    protected Integer initialAmmunition;
-    protected Integer currentAmmunition;
+    protected List<Integer> subunitAmmo;
+
     protected double hitProbabilityMin;
     protected double hitProbabilityMax;
     protected double destructionProbabilityMin;
@@ -22,10 +25,26 @@ public abstract class SimUnit {
     private SimGroup parent = null;
     Random random = new Random();
 
-    public SimUnit(String name, String type, Integer viewRange, Integer shotRange, Integer speed, Integer initialUnits, Integer initialAmmunition, double hitProbabilityMin, double hitProbabilityMax, double destructionProbabilityMin , double destructionProbabilityMax, double fireIntensity) {
-        if (name == null || type == null || viewRange == null || shotRange == null || speed == null || initialUnits == null || initialAmmunition == null ) {
+    public SimUnit(String name,
+                   String type,
+                   Integer viewRange,
+                   Integer shotRange,
+                   Integer speed,
+                   Integer initialUnits,
+                   Integer initialAmmunition,
+                   double hitProbabilityMin,
+                   double hitProbabilityMax,
+                   double destructionProbabilityMin,
+                   double destructionProbabilityMax,
+                   double fireIntensity) {
+
+        if (name == null || type == null ||
+                viewRange == null || shotRange == null ||
+                speed == null || initialUnits == null ||
+                initialAmmunition == null) {
             throw new IllegalArgumentException("Wszystkie pola muszą być wypełnione.");
         }
+
         this.name = name;
         this.type = type;
         this.viewRange = viewRange;
@@ -33,45 +52,121 @@ public abstract class SimUnit {
         this.speed = speed;
         this.initialUnits = initialUnits;
         this.activeUnits = initialUnits;
-        this.initialAmmunition = initialAmmunition;
-        this.currentAmmunition = initialAmmunition;
+
         this.hitProbabilityMin = hitProbabilityMin;
         this.hitProbabilityMax = hitProbabilityMax;
         this.destructionProbabilityMin = destructionProbabilityMin;
         this.destructionProbabilityMax = destructionProbabilityMax;
         this.fireIntensity = fireIntensity;
         this.criticalLevel = 0.3;
+
+        this.subunitAmmo = new ArrayList<>(initialUnits);
+        for (int i = 0; i < initialUnits; i++) {
+            this.subunitAmmo.add(initialAmmunition);
+        }
     }
 
-    public SimGroup getParent() {
-        return parent;
+    //Aktualna amunicja dla danej podjednostki
+    public Integer getCurrentAmmunition() {
+        if (activeUnits <= 0) {
+            return 0;
+        }
+        int idx = activeUnits - 1;
+        return subunitAmmo.get(idx);
     }
 
-    //Jednostka zostaje zniszczona
+    //Łączna aktualna amunicja
+    public Integer getTotalCurrentAmmunition() {
+        int sum = 0;
+        for (int ammo : subunitAmmo) {
+            sum += ammo;
+        }
+        return sum;
+    }
+
+    //Początkowa amunicja dla jednej podjednostki
+    public Integer getInitialAmmunition() {
+        if (subunitAmmo.isEmpty()) {
+            return 0;
+        }
+        return subunitAmmo.get(0);
+    }
+
+    //Łączna początkowa amunicja
+    public Integer getTotalInitialAmmunition() {
+        return initialUnits * getInitialAmmunition();
+    }
+
+    //Ustawienie ilosc aktualnej amunicji dla podjednostki
+    public void setCurrentAmmunition(Integer newAmmo) {
+        for (int i = 0; i < subunitAmmo.size(); i++) {
+            subunitAmmo.set(i, newAmmo);
+        }
+    }
+
+    //Sprawdzanie czy podjednostka ma amunicje
+    public boolean hasAmmo(int i) {
+        return (subunitAmmo.get(i) > 0);
+    }
+
+    //Zużycie jednego naboju przez podjednostke
+    public boolean useOneAmmo(int i) {
+        int ammo = subunitAmmo.get(i);
+        if (ammo > 0) {
+            subunitAmmo.set(i, ammo - 1);
+            return true;
+        }
+        return false;
+    }
+
+    //Zabicie jednej podjednostki
+    public int killOneSubunit(Random random) {
+        if (activeUnits <= 0) {
+            return 0;
+        }
+        int idxToKill = random.nextInt(activeUnits);
+        int lostAmmo = subunitAmmo.get(idxToKill);
+
+        int lastAliveIndex = activeUnits - 1;
+        subunitAmmo.set(idxToKill, subunitAmmo.get(lastAliveIndex));
+        subunitAmmo.set(lastAliveIndex, 0);
+
+        activeUnits--;
+        return lostAmmo;
+    }
+
+    //Czy jednostka jest zniszczona (liczba podjednostek < 0)
     public boolean isDestroyed() {
         return activeUnits <= 0;
     }
 
-    //Sprawdza, czy podana pozycja znajduje się w zasięgu strzału jednostki
+    //Czy jest w zasięgu
     public boolean inShotRange(SimPosition position){
-        return shotRange >= this.getParent().getPosition().distanceTo(position);
+        if (parent == null) return false;
+        return (shotRange >= this.getParent().getPosition().distanceTo(position));
     }
 
-    //Ustawia grupę rodzica dla jednostki.
+    //Ustawienie rodzica
     public void setParent(SimGroup parent) {
         this.parent = parent;
     }
 
-    //Prawdopodobieństwo trafienia
+    //Pobranie rodzica
+    public SimGroup getParent() {
+        return parent;
+    }
+
+    //Obliczenie prawdopodobieństwa trafienia
     public double calculateHitProbability(String targetType, double distance) {
         double targetSizeModifier = getTargetSizeModifier(targetType);
-        double hitProbabilityBase = hitProbabilityMin + random.nextDouble() * (hitProbabilityMax - hitProbabilityMin);
+        double hitProbabilityBase = hitProbabilityMin +
+                random.nextDouble() * (hitProbabilityMax - hitProbabilityMin);
         double distanceFactor = 1.0 / (1.0 + distance / shotRange);
         double hitProbability = hitProbabilityBase * targetSizeModifier * distanceFactor;
         return Math.max(0.0, Math.min(1.0, hitProbability));
     }
 
-    //Modyfikator wielkości celu wpływający na prawdopodobieństwo jego trafienia
+    //Pobranie modyfikatora wielkości jednostki potrzebnego do obliczenia prawdopodobieństwa trafienia
     private double getTargetSizeModifier(String targetType) {
         switch (targetType.toLowerCase()) {
             case "tank":
@@ -87,18 +182,18 @@ public abstract class SimUnit {
         }
     }
 
-    //Prawdopodobieństwo zniszczenia celu pod warunkiem trafienia
+    //Obliczenie prawdopodobieństwa zniszczenia
     public double calculateDestructionProbability(SimUnit attacker, String targetType) {
         double destructionModifier = getDestructionModifier(targetType);
-
         double destructionProbabilityBase = attacker.getDestructionProbabilityMin() +
-                random.nextDouble() * (attacker.getDestructionProbabilityMax() - attacker.getDestructionProbabilityMin());
+                random.nextDouble() *
+                        (attacker.getDestructionProbabilityMax() - attacker.getDestructionProbabilityMin());
 
         double destructionProbability = destructionProbabilityBase * destructionModifier;
         return Math.max(0.0, Math.min(1.0, destructionProbability));
     }
 
-    //Modyfikator trudności zniszczenia celu
+    //Pobranie modyfikatora wytrzymałości jednostki potrzebnego do obliczenia prawdopodobieństwa zniszczenia
     private double getDestructionModifier(String targetType) {
         switch (targetType.toLowerCase()) {
             case "tank":
@@ -114,16 +209,8 @@ public abstract class SimUnit {
         }
     }
 
-    //Setters
-    public void setActiveUnits(Integer initialUnits) {
-        this.activeUnits = initialUnits;
-    }
+    //GETTERY
 
-    public void setCurrentAmmunition(Integer initialAmmunition) {
-        this.currentAmmunition = initialAmmunition;
-    }
-
-    //Getters
     public String getName() {
         return name;
     }
@@ -152,14 +239,6 @@ public abstract class SimUnit {
         return activeUnits;
     }
 
-    public Integer getInitialAmmunition() {
-        return initialAmmunition;
-    }
-
-    public Integer getCurrentAmmunition() {
-        return currentAmmunition;
-    }
-
     public double getHitProbabilityMin() {
         return hitProbabilityMin;
     }
@@ -184,4 +263,3 @@ public abstract class SimUnit {
         return criticalLevel;
     }
 }
-
