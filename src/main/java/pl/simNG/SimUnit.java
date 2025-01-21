@@ -14,6 +14,7 @@ public abstract class SimUnit {
     protected Integer initialUnits;
     protected Integer activeUnits;
     protected List<Integer> subunitAmmo;
+    protected final int originalInitialAmmunition;
 
     protected double hitProbabilityMin;
     protected double hitProbabilityMax;
@@ -60,6 +61,7 @@ public abstract class SimUnit {
         this.fireIntensity = fireIntensity;
         this.criticalLevel = 0.3;
 
+        this.originalInitialAmmunition = initialAmmunition;
         this.subunitAmmo = new ArrayList<>(initialUnits);
         for (int i = 0; i < initialUnits; i++) {
             this.subunitAmmo.add(initialAmmunition);
@@ -86,15 +88,12 @@ public abstract class SimUnit {
 
     //Początkowa amunicja dla jednej podjednostki
     public Integer getInitialAmmunition() {
-        if (subunitAmmo.isEmpty()) {
-            return 0;
-        }
-        return subunitAmmo.get(0);
+        return originalInitialAmmunition;
     }
 
     //Łączna początkowa amunicja
     public Integer getTotalInitialAmmunition() {
-        return initialUnits * getInitialAmmunition();
+        return initialUnits * originalInitialAmmunition;
     }
 
     //Ustawienie ilosc aktualnej amunicji dla podjednostki
