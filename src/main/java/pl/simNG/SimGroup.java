@@ -6,6 +6,7 @@ import pl.simNG.scheduler.SimExecutionScheduler;
 import java.util.*;
 
 public abstract class SimGroup extends SimExecutionScheduler {
+    public final int id;
     protected SimPosition position;
     private final String name;
     protected final List<SimUnit> units = new ArrayList<>();
@@ -16,12 +17,16 @@ public abstract class SimGroup extends SimExecutionScheduler {
     private final SimForceType forceType;
     public SimCore parent = null;
 
+    static int IdCounter = 0;
+
     public SimGroup(String name, SimPosition position) {
+        this.id = IdCounter++;
         this.name = name;
         this.position = position;
         this.forceType = SimForceType.BLUFORCE;
     }
     public SimGroup(String name, SimPosition position, SimForceType forceType) {
+        this.id = IdCounter++;
         this.name = name;
         this.position = position;
         this.forceType = forceType;
