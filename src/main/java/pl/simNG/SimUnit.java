@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 public abstract class SimUnit {
+    public final int id;
     protected String name;
     protected String type;
     protected Integer viewRange;
@@ -25,6 +26,7 @@ public abstract class SimUnit {
 
     private SimGroup parent = null;
     Random random = new Random();
+    static int IdCounter = 0;
 
     public SimUnit(String name,
                    String type,
@@ -38,6 +40,8 @@ public abstract class SimUnit {
                    double destructionProbabilityMin,
                    double destructionProbabilityMax,
                    double fireIntensity) {
+
+        this.id = IdCounter++;
 
         if (name == null || type == null ||
                 viewRange == null || shotRange == null ||
