@@ -62,7 +62,7 @@ public abstract class SimGroup extends SimExecutionScheduler {
         Integer maxViewRange = Integer.MIN_VALUE;
 
         for (SimUnit unit : units) {
-            Integer currentViewRange = unit.viewRange;
+            Integer currentViewRange = unit.visibilityRange;
             if (currentViewRange > maxViewRange) {
                 maxViewRange = currentViewRange;
             }

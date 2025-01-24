@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+
 public abstract class SimUnit {
     protected String name;
     protected String type;
-    protected Integer viewRange;
-    protected Integer shotRange;
+
+    protected Integer visibilityRange;
+    protected Integer shootingRange;
     protected Integer speed;
 
     protected Integer initialUnits;
@@ -28,8 +30,8 @@ public abstract class SimUnit {
 
     public SimUnit(String name,
                    String type,
-                   Integer viewRange,
-                   Integer shotRange,
+                   Integer visibilityRange,
+                   Integer shootingRange,
                    Integer speed,
                    Integer initialUnits,
                    Integer initialAmmunition,
@@ -39,17 +41,14 @@ public abstract class SimUnit {
                    double destructionProbabilityMax,
                    double fireIntensity) {
 
-        if (name == null || type == null ||
-                viewRange == null || shotRange == null ||
-                speed == null || initialUnits == null ||
-                initialAmmunition == null) {
+        if (name == null || type == null || visibilityRange == null || shootingRange == null || speed == null || initialUnits == null || initialAmmunition == null) {
             throw new IllegalArgumentException("Wszystkie pola muszą być wypełnione.");
         }
 
         this.name = name;
         this.type = type;
-        this.viewRange = viewRange;
-        this.shotRange = shotRange;
+        this.visibilityRange = visibilityRange;
+        this.shootingRange = shootingRange;
         this.speed = speed;
         this.initialUnits = initialUnits;
         this.activeUnits = initialUnits;
@@ -142,7 +141,7 @@ public abstract class SimUnit {
     //Czy jest w zasięgu
     public boolean inShotRange(SimPosition position){
         if (parent == null) return false;
-        return (shotRange >= this.getParent().getPosition().distanceTo(position));
+        return (shootingRange >= this.getParent().getPosition().distanceTo(position));
     }
 
     //Ustawienie rodzica
@@ -160,7 +159,7 @@ public abstract class SimUnit {
         double targetSizeModifier = getTargetSizeModifier(targetType);
         double hitProbabilityBase = hitProbabilityMin +
                 random.nextDouble() * (hitProbabilityMax - hitProbabilityMin);
-        double distanceFactor = 1.0 / (1.0 + distance / shotRange);
+        double distanceFactor = 1.0 / (1.0 + distance / shootingRange);
         double hitProbability = hitProbabilityBase * targetSizeModifier * distanceFactor;
         return Math.max(0.0, Math.min(1.0, hitProbability));
     }
@@ -218,12 +217,12 @@ public abstract class SimUnit {
         return type;
     }
 
-    public Integer getViewRange() {
-        return viewRange;
+    public Integer getVisibilityRange() {
+        return visibilityRange;
     }
 
-    public Integer getShotRange() {
-        return shotRange;
+    public Integer getShootingRange() {
+        return shootingRange;
     }
 
     public Integer getSpeed() {

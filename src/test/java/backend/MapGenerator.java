@@ -1,3 +1,5 @@
+package backend;
+
 import java.util.Random;
 
 public class MapGenerator {
