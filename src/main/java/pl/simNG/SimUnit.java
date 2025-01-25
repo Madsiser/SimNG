@@ -4,53 +4,78 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-
+/**
+ * Abstrakcyjna klasa reprezentująca pojedynczy środek bojowy w symulacji (np. Abrams).
+ */
 public abstract class SimUnit {
+    /** Nazwa środka bojowego (np. "Abrams"). */
     protected String name;
+    /** Typ środka bojowego (np. "tank"). */
     protected String type;
 
+    /** Zasięg widzenia. */
     protected Integer visibilityRange;
+    /** Zasięg strzału. */
     protected Integer shootingRange;
+    /** Szybkość poruszania. */
     protected Integer speed;
 
+    /** Początkowa ilość środków bojowych. */
     protected Integer initialUnits;
+    /** Obecnie aktywne środki bojowe. */
     protected Integer activeUnits;
+
+    /** Lista amunicji dla każdego pojedynczego środka bojowego. */
     protected List<Integer> subunitAmmo;
+    /** Amunicja początkowa każdego pojedynczego środka bojowego (startowa). */
     protected final int originalInitialAmmunition;
 
+    /** Odchylenie poziome. */
     protected double horizontalDeviation;
+    /** Odchylenie pionowe. */
     protected double verticalDeviation;
+
+    /** Szerokość. */
     protected double width;
+    /** Wysokość. */
     protected double height;
 
+    /** Przebijalność pancerza. */
     protected double armorPenetration;
+    /** Grubość pancerza. */
     protected double armorThickness;
 
+    /** Intensywność ognia (częstotliwość strzałów). */
     protected double fireIntensity;
-    protected double criticalLevel;
 
+    /** Referencja do jednostki (grupy), do której należy środek bojowy. */
     private SimGroup parent = null;
     Random random = new Random();
 
-    public SimUnit(String name,
-                   String type,
-                   Integer visibilityRange,
-                   Integer shootingRange,
-                   Integer speed,
-                   Integer initialUnits,
-                   Integer initialAmmunition,
-                   double horizontalDeviation,
-                   double verticalDeviation,
-                   double width,
-                   double height,
-                   double armorThickness,
-                   double armorPenetration,
-                   double fireIntensity) {
-
+    /**
+     * Konstruktor środka bojowego.
+     *
+     * @param name                Nazwa (np. "Abrams").
+     * @param type                Typ (np. "tank").
+     * @param visibilityRange     Zasięg widzenia.
+     * @param shootingRange       Zasięg strzału.
+     * @param speed               Prędkość poruszania.
+     * @param initialUnits        Początkowa liczba środków bojowych.
+     * @param initialAmmunition   Amunicja początkowa na 1 środek bojowy.
+     * @param horizontalDeviation Odchylenie poziome.
+     * @param verticalDeviation   Odchylenie pionowe.
+     * @param width               Szerokość celu.
+     * @param height              Wysokość celu.
+     * @param armorThickness      Grubość pancerza.
+     * @param armorPenetration    Przebijalność pocisku.
+     * @param fireIntensity       Intensywność ognia (częstotliwość strzałów).
+     */
+    public SimUnit(String name, String type, Integer visibilityRange, Integer shootingRange, Integer speed, Integer initialUnits,
+                   Integer initialAmmunition, double horizontalDeviation, double verticalDeviation, double width, double height,
+                   double armorThickness, double armorPenetration, double fireIntensity) {
         if (name == null || type == null || visibilityRange == null || shootingRange == null || speed == null || initialUnits == null || initialAmmunition == null) {
             throw new IllegalArgumentException("Wszystkie pola muszą być wypełnione.");
         }
-
         this.name = name;
         this.type = type;
         this.visibilityRange = visibilityRange;
@@ -68,7 +93,6 @@ public abstract class SimUnit {
         this.armorPenetration = armorPenetration;
 
         this.fireIntensity = fireIntensity;
-        this.criticalLevel = 0.3;
 
         this.originalInitialAmmunition = initialAmmunition;
         this.subunitAmmo = new ArrayList<>(initialUnits);
@@ -77,7 +101,10 @@ public abstract class SimUnit {
         }
     }
 
-    //Aktualna amunicja dla danej podjednostki
+    /**
+     * Zwraca aktualną amunicję ostatniego aktywnego środka bojowego (jeśli jakieś są).
+     * @return aktualna amunicja w ostatnim aktywnym środku bojowym.
+     */
     public Integer getCurrentAmmunition() {
         if (activeUnits <= 0) {
             return 0;
@@ -86,7 +113,10 @@ public abstract class SimUnit {
         return subunitAmmo.get(idx);
     }
 
-    //Łączna aktualna amunicja
+    /**
+     * Zwraca łączną aktualną amunicję wszystkich środków bojowych.
+     * @return suma amunicji danego środka bojowego.
+     */
     public Integer getTotalCurrentAmmunition() {
         int sum = 0;
         for (int ammo : subunitAmmo) {
@@ -95,29 +125,44 @@ public abstract class SimUnit {
         return sum;
     }
 
-    //Początkowa amunicja dla jednej podjednostki
+    /**
+     * Zwraca początkową amunicję jednego środka bojowego.
+     */
     public Integer getInitialAmmunition() {
         return originalInitialAmmunition;
     }
 
-    //Łączna początkowa amunicja
+    /**
+     * Zwraca łączną początkową amunicję.
+     */
     public Integer getTotalInitialAmmunition() {
         return initialUnits * originalInitialAmmunition;
     }
 
-    //Ustawienie ilosc aktualnej amunicji dla podjednostki
+    /**
+     * Ustawia nową wartość amunicji dla każdego pojedynczego środka bojowego.
+     * @param newAmmo nowa ilość amunicji.
+     */
     public void setCurrentAmmunition(Integer newAmmo) {
         for (int i = 0; i < subunitAmmo.size(); i++) {
             subunitAmmo.set(i, newAmmo);
         }
     }
 
-    //Sprawdzanie czy podjednostka ma amunicje
+    /**
+     * Sprawdza, czy dany środek bojowy ma amunicję.
+     * @param i indeks środka bojowego
+     * @return true jeśli ma amunicję, false w p.p.
+     */
     public boolean hasAmmo(int i) {
         return (subunitAmmo.get(i) > 0);
     }
 
-    //Zużycie jednego naboju przez podjednostke
+    /**
+     * Zużycie jednego naboju przez wskazany środek bojowy.
+     * @param i indeks środka bojowego
+     * @return true jeśli faktycznie zużyto, false jeśli brak amunicji
+     */
     public boolean useOneAmmo(int i) {
         int ammo = subunitAmmo.get(i);
         if (ammo > 0) {
@@ -127,7 +172,12 @@ public abstract class SimUnit {
         return false;
     }
 
-    //Zabicie jednej podjednostki
+    /**
+     * Zabicie jednego środka bojowego (losowo spośród aktywnych).
+     * Przenosi jego amunicję na ostatni indeks, ustawia tam 0 i zmniejsza licznik aktywnych.
+     * @param random generator liczb pseudolosowych
+     * @return ile amunicji straciliśmy (tracimy tyle ile miał dany środek bojowy)
+     */
     public int killOneSubunit(Random random) {
         if (activeUnits <= 0) {
             return 0;
@@ -143,28 +193,47 @@ public abstract class SimUnit {
         return lostAmmo;
     }
 
-    //Czy jednostka jest zniszczona (liczba podjednostek < 0)
+    /**
+     * Sprawdza, czy grupa środków bojowych jest całkowicie zniszczona.
+     * @return true jeśli nie ma aktywnych środków bojowych tego typu.
+     */
     public boolean isDestroyed() {
         return activeUnits <= 0;
     }
 
-    //Czy jest w zasięgu
+    /**
+     * Sprawdza, czy dana pozycja jest w zasięgu strzału środka bojowego.
+     * @param position pozycja celu
+     * @return true jeśli jest w zasięgu.
+     */
     public boolean inShotRange(SimPosition position){
         if (parent == null) return false;
         return (shootingRange >= this.getParent().getPosition().distanceTo(position));
     }
 
-    //Ustawienie rodzica
+    /**
+     * Ustawia referencję do jednostki(grupy).
+     * @param parent referencja do SimGroup
+     */
     public void setParent(SimGroup parent) {
         this.parent = parent;
     }
 
-    //Pobranie rodzica
+    /**
+     * Zwraca jednostkę (grupę z SimGroup), do której należy ten środek bojowy.
+     * @return SimGroup rodzic.
+     */
     public SimGroup getParent() {
         return parent;
     }
 
-    //Obliczenie prawdopodobieństwa trafienia
+    /**
+     * Sprawdza, czy trafiliśmy w obrys celu z uwzględnieniem rozrzutu zależnego od odległości.
+     * @param attacker jednostka atakująca (pobieramy odchylenia)
+     * @param target   jednostka będąca celem (pobieramy wymiary)
+     * @param distance odległość do celu
+     * @return true jeśli trafiono w cel, false w p.p
+     */
     public boolean calculateHitProbability(SimUnit attacker, SimUnit target, double distance) {
         double a1 = attacker.getHorizontalDeviation()/attacker.getShootingRange();
         double a2  = attacker.getVerticalDeviation()/attacker.getShootingRange();
@@ -183,6 +252,12 @@ public abstract class SimUnit {
                 && (shotY >= -targetHeight / 2.0) && (shotY <= targetHeight / 2.0);
     }
 
+    /**
+     * Metoda używana przez metodę sprawdzającą czy trafiliśmy w cel (calculateHitProbability)
+     * Generuje dwie liczby (x, y) z rozkładu normalnego N(0,1) (Box–Muller).
+     * @param random generator liczb pseudolosowych
+     * @return tablica [x, y]
+     */
     private double[] generateGaussianPair(Random random) {
         double r1 = random.nextDouble();
         double r2 = random.nextDouble();
@@ -196,7 +271,14 @@ public abstract class SimUnit {
         return new double[]{x, y};
     }
 
-    //Obliczenie prawdopodobieństwa zniszczenia
+    /**
+     * Sprawdza, czy zniszczyliśmy cel na podstawie przebijalności
+     * z uwzględnieniem losowości (+-randomFactor) i porównania z armorThickness.
+     * @param attacker     jednostka atakująca (pobieramy armorPenetration)
+     * @param target       jednostka będąca celem (pobieramy armorThickness)
+     * @param randomFactor np. 0.25 oznacza +-25% wokół bazowej przebijalności
+     * @return true jeśli faktycznie przebito pancerz (zniszczenie), false w p.p
+     */
     public boolean calculateDestructionProbability(SimUnit attacker, SimUnit target, double randomFactor) {
         double armorPenetration = attacker.getArmorPenetration();
         double armorThickness = target.getArmorThickness();
@@ -210,63 +292,73 @@ public abstract class SimUnit {
     }
 
     //GETTERY
+    /** Zwraca nazwę środka bojowego (np. "Abrams"). */
     public String getName() {
         return name;
     }
 
+    /** Zwraca typ środka bojowego (np. "tank"). */
     public String getType() {
         return type;
     }
 
+    /** Zwraca zasięg widoczności środka bojowego. */
     public Integer getVisibilityRange() {
         return visibilityRange;
     }
 
+    /** Zwraca zasięg strzału środka bojowego. */
     public Integer getShootingRange() {
         return shootingRange;
     }
 
+    /** Zwraca szybkość środka bojowego. */
     public Integer getSpeed() {
         return speed;
     }
 
+    /** Zwraca początkową ilość środków bojowych. */
     public Integer getInitialUnits() {
         return initialUnits;
     }
 
+    /** Zwraca aktualną ilość środków bojowych. */
     public Integer getActiveUnits() {
         return activeUnits;
     }
 
+    /** Zwraca odchylenie poziome środka bojowego. */
     public double getHorizontalDeviation() {
         return horizontalDeviation;
     }
 
+    /** Zwraca odchylenie pionowe środka bojowego. */
     public double getVerticalDeviation() {
         return verticalDeviation;
     }
 
+    /** Zwraca szerokość środka bojowego. */
     public double getWidth() {
         return width;
     }
 
+    /** Zwraca wysokość środka bojowego. */
     public double getHeight() {
         return height;
     }
 
+    /** Zwraca przebijalność pancerza przez strzały środka bojowego. */
     public double getArmorPenetration() {
         return armorPenetration;
     }
 
+    /** Zwraca grubość pancerza środka bojowego. */
     public double getArmorThickness() {
         return armorThickness;
     }
 
+    /** Zwraca intensywność ognia (częstotliwość strzałów) środka bojowego. */
     public double getFireIntensity() {
         return fireIntensity;
-    }
-
-    public double getCriticalLevel() {
-        return criticalLevel;
     }
 }
