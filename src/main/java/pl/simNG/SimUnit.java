@@ -230,7 +230,7 @@ public abstract class SimUnit {
     /**
      * Sprawdza, czy trafiliśmy w obrys celu z uwzględnieniem rozrzutu zależnego od odległości.
      * @param attacker jednostka atakująca (pobieramy odchylenia)
-     * @param target   jednostka będąca celem (pobieramy wymiary)
+     * @param target jednostka będąca celem (pobieramy wymiary)
      * @param distance odległość do celu
      * @return true jeśli trafiono w cel, false w p.p
      */
@@ -274,8 +274,8 @@ public abstract class SimUnit {
     /**
      * Sprawdza, czy zniszczyliśmy cel na podstawie przebijalności
      * z uwzględnieniem losowości (+-randomFactor) i porównania z armorThickness.
-     * @param attacker     jednostka atakująca (pobieramy armorPenetration)
-     * @param target       jednostka będąca celem (pobieramy armorThickness)
+     * @param attacker jednostka atakująca (pobieramy armorPenetration)
+     * @param target jednostka będąca celem (pobieramy armorThickness)
      * @param randomFactor np. 0.25 oznacza +-25% wokół bazowej przebijalności
      * @return true jeśli faktycznie przebito pancerz (zniszczenie), false w p.p
      */
