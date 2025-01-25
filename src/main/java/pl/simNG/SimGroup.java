@@ -77,9 +77,9 @@ public abstract class SimGroup extends SimExecutionScheduler {
 
     public int getSpeed() {
         return units.stream()
-                .map(SimUnit::getSpeed) // Pobierz szybkość każdej jednostki
-                .min(Integer::compareTo) // Znajdź najmniejszą wartość
-                .orElse(1); // Domyślnie 1, jeśli brak jednostek
+                .map(SimUnit::getSpeed)
+                .min(Integer::compareTo)
+                .orElse(1);
     }
 
     public List<SimUnit> getUnits() {

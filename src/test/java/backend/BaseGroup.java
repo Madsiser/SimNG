@@ -104,7 +104,7 @@ public class BaseGroup extends SimGroup {
         if (!route.isEmpty()) {
             SimVector2i direction = route.poll();
             if (direction != null) {
-                SimVector2d smoothDirection = new SimVector2d(direction.getX(), direction.getY()).scale(stepSize);
+                SimVector2d smoothDirection = new SimVector2d(direction.getX(), direction.getY());
                 position.add(smoothDirection.getDx(), smoothDirection.getDy());
                 Logger.log(this, "Kontynuuje ruch po trasie. Następny krok: " + position, parent.getSimulationTime());
             }
@@ -121,7 +121,7 @@ public class BaseGroup extends SimGroup {
         if (!route.isEmpty()) {
             SimVector2i direction = route.poll();
             if (direction != null) {
-                SimVector2d smoothDirection = new SimVector2d(direction.getX(), direction.getY()).scale(speed);
+                SimVector2d smoothDirection = new SimVector2d(direction.getX(), direction.getY());
                 position.add(smoothDirection.getDx(), smoothDirection.getDy());
                 Logger.log(this, "Porusza się w kierunku celu. Pozycja: " + position, parent.getSimulationTime());
             }
@@ -179,20 +179,23 @@ public class BaseGroup extends SimGroup {
     //Sekcja odpowiedzialna za zadawanie obrażeń
     //============================================
 
+    //
+
     /**
      * Główna funkcja odpowiedzialna za strzelanie jednostek.
-     * @param unit
+     * @param unit - jednostka...
      */
     protected void unitShot(SimUnit unit) {
-        //Wykonuje się tylko jeśli mamy amunicję i jednostkę przeciwnika, która jest widoczna
+        // Wykonuje się tylko jeśli mamy amunicję i JAKIEŚ wrogie grupy w polu widzenia
         if (unit.getTotalCurrentAmmunition() > 0 && !visibleGroups.isEmpty()) {
 
-            //I tylko jeśli jednostka jest w zasięgu strzału
+            // Sprawdzamy, czy przynajmniej jeden przeciwnik jest w zasięgu strzału
             boolean anyEnemyInShotRange = false;
             for (SimGroup grp : visibleGroups) {
                 double distToGroup = position.distanceTo(grp.getPosition());
                 if (distToGroup <= unit.getShootingRange()) {
                     anyEnemyInShotRange = true;
+                    break; // wystarczy znalezc jednego
                 }
             }
 
@@ -200,51 +203,74 @@ public class BaseGroup extends SimGroup {
                 Logger.log(this,
                         "Grupa " + this.getName() + " rozpoczyna ostrzał. Jednostka: " +
                                 unit.getName() + ", Obecna amunicja: " + unit.getTotalCurrentAmmunition(),
-                        parent.getSimulationTime());
+                        parent.getSimulationTime()
+                );
 
+                // Czyścimy te grupy, które już są zniszczone
                 visibleGroups.removeIf(SimGroup::isDestroyed);
 
-                //Obliczamy wagę potencjalnych celów
+                // =======================
+                // Wybranie celu na podstawie wagi
+                // =======================
+                // Zbuduj mapę (targetUnit -> waga), waga = liczba aktywnych podjednostek
                 Map<SimUnit, Integer> targetWeights = new HashMap<>();
                 int totalWeight = 0;
+
                 for (SimGroup targetGroup : visibleGroups) {
                     for (SimUnit targetUnit : targetGroup.getUnits()) {
                         int weight = targetUnit.getActiveUnits();
-                        targetWeights.put(targetUnit, weight);
-                        totalWeight += weight;
+                        if (weight > 0) { // sensowny cel
+                            targetWeights.put(targetUnit, weight);
+                            totalWeight += weight;
+                        }
                     }
                 }
 
                 if (totalWeight == 0) {
-                    Logger.log(this, "Brak ważnych celów dla jednostki " + unit.getName(),
-                            parent.getSimulationTime());
+                    Logger.log(this,
+                            "Brak ważnych celów (aktywne jednostki=0) dla " + unit.getName(),
+                            parent.getSimulationTime()
+                    );
                     return;
                 }
 
-                //Losowanie celu na podstawie wagi
-                double cumulativeProbability = 0.0;
-                SimUnit selectedUnit = null;
+                // ----
+                // Sprawdź, czy jest tylko JEDNA potencjalna jednostka do ataku:
+                // ----
+                SimUnit selectedUnit;
                 SimGroup selectedGroup = null;
 
-                for (Map.Entry<SimUnit, Integer> entry : targetWeights.entrySet()) {
-                    SimUnit potentialTarget = entry.getKey();
-                    cumulativeProbability += (double) entry.getValue() / totalWeight;
-                    if (random.nextDouble() <= cumulativeProbability) {
-                        selectedUnit = potentialTarget;
-                        break;
+                if (targetWeights.size() == 1) {
+                    selectedUnit = targetWeights.keySet().iterator().next();
+                    SimUnit finalSelectedUnit = selectedUnit;
+                    selectedGroup = visibleGroups.stream()
+                            .filter(g -> g.getUnits().contains(finalSelectedUnit))
+                            .findFirst()
+                            .orElse(null);
+
+                } else {
+                    double rnd = random.nextDouble();
+                    double cumulativeProbability = 0.0;
+                    selectedUnit = null;
+
+                    for (Map.Entry<SimUnit, Integer> entry : targetWeights.entrySet()) {
+                        cumulativeProbability += (double) entry.getValue() / totalWeight;
+                        if (rnd <= cumulativeProbability) {
+                            selectedUnit = entry.getKey();
+                            break;
+                        }
+                    }
+
+                    if (selectedUnit != null) {
+                        SimUnit finalSelectedUnit = selectedUnit;
+                        selectedGroup = visibleGroups.stream()
+                                .filter(g -> g.getUnits().contains(finalSelectedUnit))
+                                .findFirst()
+                                .orElse(null);
                     }
                 }
 
-                if (selectedUnit != null) {
-                    SimUnit finalSelectedUnit = selectedUnit;
-                    selectedGroup = visibleGroups.stream()
-                            .filter(group -> group.getUnits().contains(finalSelectedUnit))
-                            .findFirst()
-                            .orElse(null);
-                }
-
-                //Wykonanie strzałów
-                if (selectedGroup != null) {
+                if (selectedGroup != null && selectedUnit != null) {
                     double distance = position.distanceTo(selectedGroup.getPosition());
 
                     int attackerActiveUnits = unit.getActiveUnits();
@@ -260,7 +286,8 @@ public class BaseGroup extends SimGroup {
 
                     Logger.log(this,
                             String.format(
-                                    "Z jednostki %s może strzelać maks %d pod-jednostek. Wylosowano %d do strzału, ale ograniczono do %d (cel ma %d, ammo=%d).",
+                                    "Z jednostki %s może strzelać maks %d pod-jednostek. " +
+                                            "Wylosowano %d do strzału, ale ograniczono do %d (cel ma %d, ammo=%d).",
                                     unit.getName(),
                                     attackerActiveUnits,
                                     randomShots,
@@ -273,13 +300,10 @@ public class BaseGroup extends SimGroup {
 
                     java.util.List<Integer> availableIndexes = new java.util.ArrayList<>();
                     for (int i = 0; i < unit.getInitialUnits(); i++) {
-                        if (i < unit.getActiveUnits()) {
-                            if (unit.hasAmmo(i)) {
-                                availableIndexes.add(i);
-                            }
+                        if (i < unit.getActiveUnits() && unit.hasAmmo(i)) {
+                            availableIndexes.add(i);
                         }
                     }
-
                     java.util.Collections.shuffle(availableIndexes);
 
                     if (finalShots > availableIndexes.size()) {
@@ -290,12 +314,10 @@ public class BaseGroup extends SimGroup {
                         int subunitIndex = availableIndexes.get(s);
                         unit.useOneAmmo(subunitIndex);
 
-                        double hitProbability = unit.calculateHitProbability(selectedUnit.getType(), distance);
-                        if (random.nextDouble() <= hitProbability) {
-                            double destructionProbability =
-                                    unit.calculateDestructionProbability(unit, selectedUnit.getType());
-
-                            if (random.nextDouble() <= destructionProbability) {
+                        //Sprawdzenie czy trafiliśmy
+                        if (unit.calculateHitProbability(unit, selectedUnit, distance)) {
+                            //Sprawdzenie czy zniszczyliśmy
+                            if (unit.calculateDestructionProbability(unit, selectedUnit, 0.25)) {
                                 selectedGroup.applyDamage(this, selectedUnit);
                                 kills++;
                                 if (selectedUnit.getActiveUnits() <= 0) {
@@ -309,7 +331,8 @@ public class BaseGroup extends SimGroup {
 
                     Logger.log(this,
                             String.format(
-                                    "Seria strzałów zakończona: wystrzelono %d pocisków. Zniszczono %d jednostek przeciwnika [%s]. Amunicja spadła z %d do %d.",
+                                    "Seria strzałów zakończona: wystrzelono %d pocisków. " +
+                                            "Zniszczono %d jednostek [%s]. Amunicja spadła z %d do %d.",
                                     (ammoBefore - ammoAfter),
                                     kills,
                                     selectedGroup.getName(),
@@ -319,12 +342,14 @@ public class BaseGroup extends SimGroup {
                             parent.getSimulationTime()
                     );
                 }
+
+                scheduleNextShot(unit);
             }
-            scheduleNextShot(unit);
         }else {
             scheduleNextShot(unit);
         }
     }
+
 
     //Planowanie kolejnego zadania
     private void scheduleNextShot(SimUnit unit) {
@@ -338,4 +363,6 @@ public class BaseGroup extends SimGroup {
             addTask(() -> unitShot(unit), nextShotInterval);
         }
     }
+
+
 }

@@ -18,10 +18,14 @@ public abstract class SimUnit {
     protected List<Integer> subunitAmmo;
     protected final int originalInitialAmmunition;
 
-    protected double hitProbabilityMin;
-    protected double hitProbabilityMax;
-    protected double destructionProbabilityMin;
-    protected double destructionProbabilityMax;
+    protected double horizontalDeviation;
+    protected double verticalDeviation;
+    protected double width;
+    protected double height;
+
+    protected double armorPenetration;
+    protected double armorThickness;
+
     protected double fireIntensity;
     protected double criticalLevel;
 
@@ -35,10 +39,12 @@ public abstract class SimUnit {
                    Integer speed,
                    Integer initialUnits,
                    Integer initialAmmunition,
-                   double hitProbabilityMin,
-                   double hitProbabilityMax,
-                   double destructionProbabilityMin,
-                   double destructionProbabilityMax,
+                   double horizontalDeviation,
+                   double verticalDeviation,
+                   double width,
+                   double height,
+                   double armorThickness,
+                   double armorPenetration,
                    double fireIntensity) {
 
         if (name == null || type == null || visibilityRange == null || shootingRange == null || speed == null || initialUnits == null || initialAmmunition == null) {
@@ -53,10 +59,14 @@ public abstract class SimUnit {
         this.initialUnits = initialUnits;
         this.activeUnits = initialUnits;
 
-        this.hitProbabilityMin = hitProbabilityMin;
-        this.hitProbabilityMax = hitProbabilityMax;
-        this.destructionProbabilityMin = destructionProbabilityMin;
-        this.destructionProbabilityMax = destructionProbabilityMax;
+        this.horizontalDeviation = horizontalDeviation;
+        this.verticalDeviation = verticalDeviation;
+        this.width = width;
+        this.height = height;
+
+        this.armorThickness = armorThickness;
+        this.armorPenetration = armorPenetration;
+
         this.fireIntensity = fireIntensity;
         this.criticalLevel = 0.3;
 
@@ -155,60 +165,51 @@ public abstract class SimUnit {
     }
 
     //Obliczenie prawdopodobieństwa trafienia
-    public double calculateHitProbability(String targetType, double distance) {
-        double targetSizeModifier = getTargetSizeModifier(targetType);
-        double hitProbabilityBase = hitProbabilityMin +
-                random.nextDouble() * (hitProbabilityMax - hitProbabilityMin);
-        double distanceFactor = 1.0 / (1.0 + distance / shootingRange);
-        double hitProbability = hitProbabilityBase * targetSizeModifier * distanceFactor;
-        return Math.max(0.0, Math.min(1.0, hitProbability));
+    public boolean calculateHitProbability(SimUnit attacker, SimUnit target, double distance) {
+        double a1 = attacker.getHorizontalDeviation()/attacker.getShootingRange();
+        double a2  = attacker.getVerticalDeviation()/attacker.getShootingRange();
+
+        double currentHorizDev=a1*distance;
+        double currentVertDev=a2*distance;
+
+        double[] gaussianPair = generateGaussianPair(this.random);
+        double shotX = gaussianPair[0] * currentHorizDev;
+        double shotY = gaussianPair[1] * currentVertDev;
+
+        double targetWidth = target.getWidth();
+        double targetHeight = target.getHeight();
+
+        return (shotX >= -targetWidth  / 2.0) && (shotX <= targetWidth  / 2.0)
+                && (shotY >= -targetHeight / 2.0) && (shotY <= targetHeight / 2.0);
     }
 
-    //Pobranie modyfikatora wielkości jednostki potrzebnego do obliczenia prawdopodobieństwa trafienia
-    private double getTargetSizeModifier(String targetType) {
-        switch (targetType.toLowerCase()) {
-            case "tank":
-                return 1.2;
-            case "artillery":
-                return 1.1;
-            case "combat vehicle":
-                return 1.0;
-            case "soldier":
-                return 0.8;
-            default:
-                return 1.0;
-        }
+    private double[] generateGaussianPair(Random random) {
+        double r1 = random.nextDouble();
+        double r2 = random.nextDouble();
+
+        double r = Math.sqrt(-2.0 * Math.log(r1));
+        double t = 2.0 * Math.PI * r2;
+
+        double x = r * Math.cos(t);
+        double y = r * Math.sin(t);
+
+        return new double[]{x, y};
     }
 
     //Obliczenie prawdopodobieństwa zniszczenia
-    public double calculateDestructionProbability(SimUnit attacker, String targetType) {
-        double destructionModifier = getDestructionModifier(targetType);
-        double destructionProbabilityBase = attacker.getDestructionProbabilityMin() +
-                random.nextDouble() *
-                        (attacker.getDestructionProbabilityMax() - attacker.getDestructionProbabilityMin());
+    public boolean calculateDestructionProbability(SimUnit attacker, SimUnit target, double randomFactor) {
+        double armorPenetration = attacker.getArmorPenetration();
+        double armorThickness = target.getArmorThickness();
 
-        double destructionProbability = destructionProbabilityBase * destructionModifier;
-        return Math.max(0.0, Math.min(1.0, destructionProbability));
-    }
+        double minPenetration = armorPenetration * (1.0 - randomFactor);
+        double maxPenetration = armorPenetration * (1.0 + randomFactor);
 
-    //Pobranie modyfikatora wytrzymałości jednostki potrzebnego do obliczenia prawdopodobieństwa zniszczenia
-    private double getDestructionModifier(String targetType) {
-        switch (targetType.toLowerCase()) {
-            case "tank":
-                return 0.2;
-            case "artillery":
-                return 0.5;
-            case "combat vehicle":
-                return 0.7;
-            case "soldier":
-                return 1.0;
-            default:
-                return 0.5;
-        }
+        double randomValue = this.random.nextDouble();
+        double rolledPenetration = minPenetration + randomValue * (maxPenetration - minPenetration);
+        return (rolledPenetration >= armorThickness);
     }
 
     //GETTERY
-
     public String getName() {
         return name;
     }
@@ -237,20 +238,28 @@ public abstract class SimUnit {
         return activeUnits;
     }
 
-    public double getHitProbabilityMin() {
-        return hitProbabilityMin;
+    public double getHorizontalDeviation() {
+        return horizontalDeviation;
     }
 
-    public double getHitProbabilityMax() {
-        return hitProbabilityMax;
+    public double getVerticalDeviation() {
+        return verticalDeviation;
     }
 
-    public double getDestructionProbabilityMin() {
-        return destructionProbabilityMin;
+    public double getWidth() {
+        return width;
     }
 
-    public double getDestructionProbabilityMax() {
-        return destructionProbabilityMax;
+    public double getHeight() {
+        return height;
+    }
+
+    public double getArmorPenetration() {
+        return armorPenetration;
+    }
+
+    public double getArmorThickness() {
+        return armorThickness;
     }
 
     public double getFireIntensity() {
