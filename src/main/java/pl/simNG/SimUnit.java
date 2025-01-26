@@ -8,6 +8,8 @@ import java.util.Random;
  * Abstrakcyjna klasa reprezentująca pojedynczy środek bojowy w symulacji (np. Abrams).
  */
 public abstract class SimUnit {
+    /** Numer ID środka bojowego */
+    public final int id;
     /** Nazwa środka bojowego (np. "Abrams"). */
     protected String name;
     /** Typ środka bojowego (np. "tank"). */
@@ -51,6 +53,7 @@ public abstract class SimUnit {
     /** Referencja do jednostki (grupy), do której należy środek bojowy. */
     private SimGroup parent = null;
     Random random = new Random();
+    static int IdCounter = 0;
 
     /**
      * Konstruktor środka bojowego.
@@ -73,6 +76,8 @@ public abstract class SimUnit {
     public SimUnit(String name, String type, Integer visibilityRange, Integer shootingRange, Integer speed, Integer initialUnits,
                    Integer initialAmmunition, double horizontalDeviation, double verticalDeviation, double width, double height,
                    double armorThickness, double armorPenetration, double fireIntensity) {
+        this.id = IdCounter++;
+
         if (name == null || type == null || visibilityRange == null || shootingRange == null || speed == null || initialUnits == null || initialAmmunition == null) {
             throw new IllegalArgumentException("Wszystkie pola muszą być wypełnione.");
         }

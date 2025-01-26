@@ -10,6 +10,8 @@ import java.util.*;
  * Grupa może zawierać wiele obiektów typu SimUnit. Posiada też pozycję na mapie.
  */
 public abstract class SimGroup extends SimExecutionScheduler {
+    /** Numer ID jednostki. */
+    public final int id;
     /** Bieżąca pozycja jednostki. */
     protected SimPosition position;
     /** Nazwa jednostki (np. "1st Platoon"). */
@@ -31,6 +33,8 @@ public abstract class SimGroup extends SimExecutionScheduler {
     /** Główny obiekt symulacji (rdzeń symulacji). */
     public SimCore parent = null;
 
+    static int IdCounter = 0;
+
     /**
      * Konstruktor jednostki z nazwą, pozycją startową i przynależnością.
      * @param name nazwa grupy
@@ -38,6 +42,7 @@ public abstract class SimGroup extends SimExecutionScheduler {
      * @param forceType typ sił (np. BLUEFOR, OPFOR)
      */
     public SimGroup(String name, SimPosition position, SimForceType forceType) {
+        this.id = IdCounter++;
         this.name = name;
         this.position = position;
         this.forceType = forceType;
