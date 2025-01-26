@@ -7,12 +7,7 @@ import static pl.simNG.map.SimMap.aStarSearch;
 
 public class Test {
     public static void main(String[] args) {
-        int[][] grid = {
-                {1, 1, 1, 1},
-                {1, 0, 0, 5},
-                {1, 1, 10, 1},
-                {1, 9, 9, 1}
-        };
+        int[][] grid = MapGenerator.generate(50, 50);
 
         int[] start = {0, 0};
         int[] end = {3, 2};

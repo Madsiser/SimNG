@@ -21,4 +21,9 @@ public class Node implements Comparable<Node> {
     public int compareTo(Node other) {
         return Double.compare(this.getFCost(), other.getFCost());
     }
+
+    @Override
+    public String toString(){
+        return "row:col(" + this.row + ":" + this.col + ")";
+    }
 }

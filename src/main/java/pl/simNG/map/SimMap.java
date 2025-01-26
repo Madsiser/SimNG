@@ -137,9 +137,9 @@ public class SimMap {
             int dCol = curr.col - prev.col;
 
             if (dRow == 0 && dCol == -1) {
-                directions.add(SimVector2i.UP);
-            } else if (dRow == 0 && dCol == 1) {
                 directions.add(SimVector2i.DOWN);
+            } else if (dRow == 0 && dCol == 1) {
+                directions.add(SimVector2i.UP);
             } else if (dRow == -1 && dCol == 0) {
                 directions.add(SimVector2i.LEFT);
             } else if (dRow == 1 && dCol == 0) {

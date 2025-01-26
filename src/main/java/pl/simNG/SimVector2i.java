@@ -7,8 +7,8 @@ public class SimVector2i {
     public int x;
     public int y;
 
-    public static final SimVector2i UP = new SimVector2i(0, -1);
-    public static final SimVector2i DOWN = new SimVector2i(0, 1);
+    public static final SimVector2i UP = new SimVector2i(0, 1);
+    public static final SimVector2i DOWN = new SimVector2i(0, -1);
     public static final SimVector2i LEFT = new SimVector2i(-1, 0);
     public static final SimVector2i RIGHT = new SimVector2i(1, 0);
 
