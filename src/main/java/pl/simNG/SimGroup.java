@@ -214,6 +214,10 @@ public abstract class SimGroup extends SimExecutionScheduler {
         return visibleGroups;
     }
 
+    /**
+     * Zwraca aktualną trasę ruchu jednostki (grupy) jako listę wektorów przesunięć.
+     * @return lista wektorów przesunięć opisujących trasę
+     */
     public List<SimVector2i> getRoute(){
         return this.route;
     }
