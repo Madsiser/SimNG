@@ -134,4 +134,8 @@ public abstract class SimGroup extends SimExecutionScheduler {
     public List<SimGroup> getVisibleGroups() {
         return visibleGroups;
     }
+
+    public List<SimVector2i> getRoute(){
+        return this.route;
+    }
 }
