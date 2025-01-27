@@ -11,6 +11,11 @@ public class SimPosition {
         this.y = y;
     }
 
+    public SimPosition(SimPosition position) {
+        this.x = position.x;
+        this.y = position.y;
+    }
+
     public double getX() {
         return x;
     }
@@ -39,17 +44,46 @@ public class SimPosition {
         return Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2));
     }
 
-    public void add(SimPosition position) {
-        this.x += position.getX();
-        this.y += position.getY();
+//    public void add(SimPosition position) {
+//        this.x += position.getX();
+//        this.y += position.getY();
+//    }
+//    public void add(SimVector2i vector2i) {
+//        this.x += vector2i.x;
+//        this.y += vector2i.y;
+//    }
+//    public void add(double dx, double dy) {
+//        this.x += dx;
+//        this.y += dy;
+//    }
+
+    public SimPosition add(SimPosition position) {
+        return new SimPosition(this.x + position.getX(), this.y + position.getY());
     }
-    public void add(SimVector2i vector2i) {
-        this.x += vector2i.x;
-        this.y += vector2i.y;
+    public SimPosition add(SimVector2i vector2i) {
+        return new SimPosition(this.x + vector2i.x, this.y + vector2i.y);
     }
-    public void add(double dx, double dy) {
-        this.x += dx;
-        this.y += dy;
+    public SimPosition add(double dx, double dy) {
+        return new SimPosition(this.x + dx, this.y + dy);
+    }
+    public SimPosition subtract(SimPosition position) {
+        return new SimPosition(this.x - position.getX(), this.y - position.getY());
+    }
+    public SimPosition subtract(SimVector2i vector2i) {
+        return new SimPosition(this.x - vector2i.x, this.y - vector2i.y);
+    }
+    public SimPosition subtract(double dx, double dy) {
+        return new SimPosition(this.x - dx, this.y - dy);
+    }
+    public double length() {
+        return Math.sqrt(this.x * this.x + this.y * this.y);
+    }
+    public SimVector2i normalize() {
+        double len = length();
+        if (len == 0) {
+            return new SimVector2i(0, 0);
+        }
+        return new SimVector2i(x / len, y / len);
     }
 
 

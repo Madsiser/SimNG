@@ -34,6 +34,10 @@ public abstract class SimGroup extends SimExecutionScheduler {
     /** Główny obiekt symulacji (rdzeń symulacji). */
     public SimCore parent = null;
 
+    private SimPosition nextPosition;
+    private SimVector2i moveDirection;
+    private static double MOVE_RATE = 10.0;
+
     static int IdCounter = 0;
 
     /**
@@ -47,6 +51,7 @@ public abstract class SimGroup extends SimExecutionScheduler {
         this.name = name;
         this.position = position;
         this.forceType = forceType;
+        this.nextPosition = this.position;
     }
 
     /**
@@ -148,10 +153,18 @@ public abstract class SimGroup extends SimExecutionScheduler {
      * Metoda poruszania się o jeden krok z trasy.
      */
     protected void move(){
-        SimVector2i direction = route.poll();
-        if (direction != null){
-            this.position.add(direction);
+        if (this.position.subtract(this.nextPosition).length() < 0.1){
+            this.position = this.nextPosition;
+            SimVector2i direction = route.poll();
+            if (direction != null){
+                this.nextPosition = this.position.add(direction);
+                this.moveDirection = direction;
+            }
+        }else{
+            this.position = this.position.add(this.moveDirection.getX() * (this.getSpeed() / MOVE_RATE), this.moveDirection.getY() * (this.getSpeed() / MOVE_RATE));
         }
+
+
     }
 
     protected void commandLogic(){
