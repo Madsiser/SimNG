@@ -37,6 +37,10 @@ public class SimCommander extends SimExecutionScheduler {
         return commandQueueHistory;
     }
 
+    public void clearCommands(){
+        this.commandQueue.clear();
+    }
+
     private void mainFx(){
         if (allDone()){
             assignNewCommand();
