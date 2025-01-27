@@ -29,6 +29,10 @@ public class SimCommander extends SimExecutionScheduler {
         commandQueue.add(command);
     }
 
+    public void clearCommands(){
+        this.commandQueue.clear();
+    }
+
     public LinkedList<SimCommand> getCommandQueue() {
         return commandQueue;
     }
@@ -37,9 +41,6 @@ public class SimCommander extends SimExecutionScheduler {
         return commandQueueHistory;
     }
 
-    public void clearCommands(){
-        this.commandQueue.clear();
-    }
 
     private void mainFx(){
         if (allDone()){
