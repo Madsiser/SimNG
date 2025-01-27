@@ -11,7 +11,6 @@ import java.util.*;
  * Posiada algorytm wyszukiwania najlepszej drogi A*.
  */
 public class SimMap {
-
     /** Tablica reprezentująca siatkę mapy, gdzie każda komórka opisuje trudność terenu lub dostępność. */
     int[][] map;
 
