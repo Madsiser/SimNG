@@ -25,7 +25,7 @@ public abstract class SimGroup extends SimExecutionScheduler {
     protected List<SimGroup> visibleGroups = new ArrayList<>();
 
     /** Bieżące polecenie (rozkaz). */
-    private SimCommand currentCommand = null; //TODO Implementation commands execution
+    private SimCommand currentCommand = null;
     private boolean workingOnCommand = false;
     /** Trasa po której porusza się jednostka (sekwencja kroków w mapie). */
     protected LinkedList<SimVector2i> route = new LinkedList<>();
