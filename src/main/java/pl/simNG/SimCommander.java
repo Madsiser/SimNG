@@ -9,21 +9,12 @@ import java.util.List;
 
 public class SimCommander extends SimExecutionScheduler {
     protected LinkedList<SimCommand> commandQueue = new LinkedList<>();
+    protected LinkedList<SimCommand> commandQueueHistory = new LinkedList<>();
     protected List<SimGroup> groups = new ArrayList<>();
     public SimCommand currentCommand = null;
 
     public SimCommander(){
         addTask(this::mainFx,1);
-    }
-
-    private void mainFx(){
-        if (allDone()){
-            assignNewCommand();
-            addTask(this::mainFx,15);
-        }else {
-            addTask(this::mainFx,1);
-        }
-
     }
 
     public void addGroups(SimGroup group) {
@@ -34,14 +25,25 @@ public class SimCommander extends SimExecutionScheduler {
         return currentCommand;
     }
 
-    public void assignCommand(SimCommand command) {
-        for (SimGroup g: groups){
-            g.assignCommand(currentCommand);
-        }
-    }
-
     public void addCommand(SimCommand command){
         commandQueue.add(command);
+    }
+
+    public LinkedList<SimCommand> getCommandQueue() {
+        return commandQueue;
+    }
+
+    public LinkedList<SimCommand> getCommandQueueHistory() {
+        return commandQueueHistory;
+    }
+
+    private void mainFx(){
+        if (allDone()){
+            assignNewCommand();
+            addTask(this::mainFx,15);
+        }else {
+            addTask(this::mainFx,1);
+        }
     }
 
     private boolean allDone(){
@@ -54,6 +56,7 @@ public class SimCommander extends SimExecutionScheduler {
     }
 
     private void assignNewCommand(){
+        commandQueueHistory.add(currentCommand);
         currentCommand = commandQueue.isEmpty() ? null : commandQueue.poll();
         for (SimGroup g : groups) {
             g.assignCommand(currentCommand);
