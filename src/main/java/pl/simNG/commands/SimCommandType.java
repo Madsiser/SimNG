@@ -1,6 +1,6 @@
 package pl.simNG.commands;
 
-public enum CommandType {
+public enum SimCommandType {
     MOVE,
     ATTACK,
     DEFEND

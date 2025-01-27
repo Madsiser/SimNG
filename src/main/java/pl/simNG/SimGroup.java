@@ -1,6 +1,6 @@
 package pl.simNG;
 
-import pl.simNG.commands.Command;
+import pl.simNG.commands.SimCommand;
 import pl.simNG.scheduler.SimExecutionScheduler;
 
 import java.util.*;
@@ -25,7 +25,8 @@ public abstract class SimGroup extends SimExecutionScheduler {
     protected List<SimGroup> visibleGroups = new ArrayList<>();
 
     /** Bieżące polecenie (rozkaz). */
-    public Command currentCommand = null; //TODO Implementation commands execution
+    private SimCommand currentCommand = null; //TODO Implementation commands execution
+    private boolean workingOnCommand = false;
     /** Trasa po której porusza się jednostka (sekwencja kroków w mapie). */
     protected LinkedList<SimVector2i> route = new LinkedList<>();
     /** Strona do której należy jednostka (BLUFOR, REDFOR). */
@@ -98,7 +99,7 @@ public abstract class SimGroup extends SimExecutionScheduler {
      * Ustawia bieżące polecenie (komendę).
      * @param command obiekt typu Command
      */
-    public void assignCommand(Command command) {
+    public void assignCommand(SimCommand command) {
         this.currentCommand = command;
     }
 
@@ -151,6 +152,28 @@ public abstract class SimGroup extends SimExecutionScheduler {
         if (direction != null){
             this.position.add(direction);
         }
+    }
+
+    protected void commandLogic(){
+        try {
+            switch (this.getCurrentCommand().type()) {
+                case MOVE -> {
+                    if (this.getWorkingOnCommand()) {
+                        if(this.position.equals(this.getCurrentCommand().data())){
+                            this.endCurrentCommand();
+                        }
+                    }else{
+                        this.startCurrentCommand();
+                        this.route = calculateRouteTo((SimPosition) this.getCurrentCommand().data());
+                    }
+                }
+                case DEFEND -> {
+
+                }
+                default -> {
+                }
+            }
+        } catch (Exception ignored){}
     }
 
     /**
@@ -216,5 +239,19 @@ public abstract class SimGroup extends SimExecutionScheduler {
 
     public List<SimVector2i> getRoute(){
         return this.route;
+    }
+
+    protected SimCommand getCurrentCommand(){
+        return this.currentCommand;
+    }
+    protected void startCurrentCommand(){
+        this.workingOnCommand = true;
+    }
+    protected boolean getWorkingOnCommand(){
+        return this.workingOnCommand;
+    }
+    protected void endCurrentCommand(){
+        this.currentCommand = null;
+        this.workingOnCommand = false;
     }
 }

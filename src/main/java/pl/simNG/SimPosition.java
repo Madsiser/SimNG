@@ -1,5 +1,7 @@
 package pl.simNG;
 
+import java.util.Objects;
+
 public class SimPosition {
     private double x;
     private double y;
@@ -48,6 +50,19 @@ public class SimPosition {
     public void add(double dx, double dy) {
         this.x += dx;
         this.y += dy;
+    }
+
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == null || getClass() != object.getClass()) return false;
+        SimPosition that = (SimPosition) object;
+        return Double.compare(x, that.x) == 0 && Double.compare(y, that.y) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 
     @Override

@@ -7,10 +7,9 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import backend.BattalionManager;
 import backend.MapGenerator;
-import pl.simNG.SimCore;
-import pl.simNG.SimForceType;
-import pl.simNG.SimGroup;
-import pl.simNG.SimPosition;
+import pl.simNG.*;
+import pl.simNG.commands.SimCommand;
+import pl.simNG.commands.SimCommandType;
 import pl.simNG.map.SimMap;
 
 import java.util.List;
@@ -22,19 +21,28 @@ public class App extends Application {
         SimCore simulation = new SimCore();
         simulation.setMap(new SimMap(MapGenerator.generate(501, 501)));
 
-        simulation.addGroup(new BattalionManager.TankBattalion("Blue Tank Battalion 1", new SimPosition(16, 18), SimForceType.BLUFORCE, 10));
-        simulation.addGroup(new BattalionManager.MechanizedBattalion("Blue Mechanized Battalion 1", new SimPosition(22, 32), SimForceType.BLUFORCE, 10));
-        simulation.addGroup(new BattalionManager.InfantryBattalion("Blue Infantry Battalion 1", new SimPosition(22, 25), SimForceType.BLUFORCE, 50));
-        simulation.addGroup(new BattalionManager.InfantryBattalion("Red Infantry Battalion 1", new SimPosition(13, 22), SimForceType.REDFORCE, 50));
-        simulation.addGroup(new BattalionManager.ArtilleryBattalion("Red Artillery Battalion 1", new SimPosition(27, 28), SimForceType.REDFORCE, 10));
+        SimGroup tank = new BattalionManager.TankBattalion("Blue Tank Battalion 1", new SimPosition(16, 18), SimForceType.BLUFORCE, 10);
+//        simulation.addGroup(new BattalionManager.MechanizedBattalion("Blue Mechanized Battalion 1", new SimPosition(22, 32), SimForceType.BLUFORCE, 10));
+//        simulation.addGroup(new BattalionManager.InfantryBattalion("Blue Infantry Battalion 1", new SimPosition(22, 25), SimForceType.BLUFORCE, 50));
+        SimGroup enemy = new BattalionManager.InfantryBattalion("Red Infantry Battalion 1", new SimPosition(13, 22), SimForceType.REDFORCE, 50);
+//        simulation.addGroup(new BattalionManager.ArtilleryBattalion("Red Artillery Battalion 1", new SimPosition(27, 28), SimForceType.REDFORCE, 10));
 //        simulation.addGroup(new BattalionManager.ArtilleryBattalion("Red Enemy Battalion", new SimPosition(5, 15), SimForceType.REDFORCE, 10));
-        simulation.addGroup(new BattalionManager.InfantryBattalion("Red Infantry Battalion 2", new SimPosition(25, 35), SimForceType.REDFORCE, 50));
-        simulation.addGroup(new BattalionManager.ArtilleryBattalion("Red Enemy Battalion", new SimPosition(25, 25), SimForceType.REDFORCE, 10));
+//        simulation.addGroup(new BattalionManager.InfantryBattalion("Red Infantry Battalion 2", new SimPosition(25, 35), SimForceType.REDFORCE, 50));
+//        simulation.addGroup(new BattalionManager.ArtilleryBattalion("Red Enemy Battalion", new SimPosition(25, 25), SimForceType.REDFORCE, 10));
 //        simulation.addGroup(new BaseGroup("Charlie Force", new SimPosition(26.0, 26.0), SimForceType.BLUFORCE));
 //        simulation.addGroup(new BaseGroup("Echo Force", new SimPosition(25.0, 13.0), SimForceType.BLUFORCE));
 //        simulation.addGroup(new BaseGroup("Foxtrot Force", new SimPosition(13.0, 25.0), SimForceType.REDFORCE));
 //        simulation.addGroup(new BaseGroup("Golf Force", new SimPosition(27.0, 15.0), SimForceType.REDFORCE));
 //        simulation.addGroup(new BaseGroup("Hotel Force", new SimPosition(24.0, 24.0), SimForceType.REDFORCE));
+
+        SimCommander com = new SimCommander();
+        com.addCommand(new SimCommand(SimCommandType.MOVE, new SimPosition(10,10)));
+        com.addGroups(enemy);
+        com.addCommand(new SimCommand(SimCommandType.MOVE, new SimPosition(2,5)));
+        com.addCommand(new SimCommand(SimCommandType.MOVE, new SimPosition(10,5)));
+        com.addCommand(new SimCommand(SimCommandType.MOVE, new SimPosition(15,10)));
+        simulation.addSimObject(com);
+        simulation.addGroup(enemy);
 
         Random random = new Random(10);
 
@@ -87,6 +95,7 @@ public class App extends Application {
         Scene scene = new Scene(root, 1500, 800);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Symulacja - Pole walki");
+
         primaryStage.show();
 
         simulation.startSimulation();

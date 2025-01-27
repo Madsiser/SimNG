@@ -1,17 +1,18 @@
-package pl.simNG.commands;
+package pl.simNG;
 
-import pl.simNG.SimGroup;
+import pl.simNG.commands.SimCommand;
 import pl.simNG.scheduler.SimExecutionScheduler;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class SimCommander extends SimExecutionScheduler {
-    protected List<Command> commandQueue = new ArrayList<>();
+    protected LinkedList<SimCommand> commandQueue = new LinkedList<>();
     protected List<SimGroup> groups = new ArrayList<>();
-    public Command currentCommand = null;
+    public SimCommand currentCommand = null;
 
-    SimCommander(){
+    public SimCommander(){
         addTask(this::mainFx,1);
     }
 
@@ -29,35 +30,31 @@ public class SimCommander extends SimExecutionScheduler {
         groups.add(group);
     }
 
-    public Command getCurrentCommand() {
+    public SimCommand getCurrentCommand() {
         return currentCommand;
     }
 
-    public void assignCommand(Command command) {
-        commandQueue.add(command);
-        if (currentCommand == null) {
-            currentCommand = commandQueue.remove(0);
+    public void assignCommand(SimCommand command) {
+        for (SimGroup g: groups){
+            g.assignCommand(currentCommand);
         }
-        assignNewCommand();
     }
 
-    public void addCommand(Command command){
+    public void addCommand(SimCommand command){
         commandQueue.add(command);
     }
 
     private boolean allDone(){
-        boolean allDone = true;
         for (SimGroup g : groups) {
-            if (g.currentCommand == null) {
-                allDone = false;
-                break;
+            if (g.getCurrentCommand() != null) {
+                return false;
             }
         }
-        return allDone;
+        return true;
     }
 
     private void assignNewCommand(){
-        currentCommand = commandQueue.isEmpty() ? null : commandQueue.remove(0);
+        currentCommand = commandQueue.isEmpty() ? null : commandQueue.poll();
         for (SimGroup g : groups) {
             g.assignCommand(currentCommand);
         }

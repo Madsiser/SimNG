@@ -131,7 +131,7 @@ public class SimCore {
     public void setTimeOfOneStep(int timeOfOneStep) {
         this.timeOfOneStep = timeOfOneStep;
     }
-    public void addSimObjects(SimExecutionScheduler simObject) {
+    public void addSimObject(SimExecutionScheduler simObject) {
         this.simObjects.add(simObject);
     }
     public int getSimulationTime() {
