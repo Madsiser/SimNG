@@ -35,6 +35,8 @@ public abstract class SimGroup extends SimExecutionScheduler {
     public SimCore parent = null;
     public SimCommander commander = null;
 
+    protected SimPosition lastAttackerPosition = null;
+
     private SimPosition nextPosition;
     private SimVector2i moveDirection;
     private static double MOVE_RATE = 30.0;
@@ -203,7 +205,32 @@ public abstract class SimGroup extends SimExecutionScheduler {
                         workingOnCommand = false;
                     }
                 }
-                //Normalny ruch komendy
+                //Ruch gdy zostanie zaatakowany
+            } else if (lastAttackerPosition != null) {
+                boolean attackerStillExists = parent.getGroups().stream()
+                        .anyMatch(group -> group.getPosition().equals(lastAttackerPosition) && !group.isDestroyed());
+
+                if (!attackerStillExists) {
+                    lastAttackerPosition = null;
+                    route.clear();
+                    workingOnCommand = false;
+                } else {
+                    double currentDistanceToAttacker = position.distanceTo(lastAttackerPosition);
+
+                    int myMinShootingRange = units.stream()
+                            .mapToInt(SimUnit::getShootingRange)
+                            .min()
+                            .orElse(1);
+
+                    if (currentDistanceToAttacker > myMinShootingRange - 0.5) {
+                        route = calculateRouteTo(lastAttackerPosition);
+                        workingOnCommand = true;
+                    } else {
+                        route.clear();
+                        workingOnCommand = false;
+                    }
+                }
+                //Normalny ruch
             } else {
                 switch (this.getCurrentCommand().type()) {
                     case MOVE -> {
