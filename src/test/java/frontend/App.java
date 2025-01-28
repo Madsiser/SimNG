@@ -45,7 +45,7 @@ public class App extends Application {
         com.addCommand(new SimCommand(SimCommandType.MOVE, new SimPosition(15,10)));
         simulation.addGroup(tank);
         simulation.addGroup(enemy);
-        simulation.addSimObject(com);
+        simulation.addCommanders(com);
 //        simulation.addGroup(tank);
 
         Random random = new Random(10);
