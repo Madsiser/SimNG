@@ -161,7 +161,8 @@ public abstract class SimGroup extends SimExecutionScheduler {
                 this.moveDirection = direction;
             }
         }else{
-            this.position = this.position.add(this.moveDirection.getX() * (this.getSpeed() / MOVE_RATE), this.moveDirection.getY() * (this.getSpeed() / MOVE_RATE));
+//            this.position = this.position.add(this.moveDirection.getX() * (this.getSpeed() / MOVE_RATE), this.moveDirection.getY() * (this.getSpeed() / MOVE_RATE));
+            this.position = this.position.add(this.moveDirection);
         }
 
 

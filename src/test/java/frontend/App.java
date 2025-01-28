@@ -20,6 +20,7 @@ public class App extends Application {
     public void start(Stage primaryStage) {
         SimCore simulation = new SimCore();
         simulation.setMap(new SimMap(MapGenerator.generate(501, 501)));
+//        simulation.setTimeOfOneStep(10);
 
         SimGroup tank = new BattalionManager.TankBattalion("Blue Tank Battalion 1", new SimPosition(16, 18), SimForceType.BLUFORCE, 10);
 //        simulation.addGroup(new BattalionManager.MechanizedBattalion("Blue Mechanized Battalion 1", new SimPosition(22, 32), SimForceType.BLUFORCE, 10));
@@ -38,11 +39,14 @@ public class App extends Application {
         SimCommander com = new SimCommander();
         com.addCommand(new SimCommand(SimCommandType.MOVE, new SimPosition(10,10)));
         com.addGroups(enemy);
+        com.addGroups(tank);
         com.addCommand(new SimCommand(SimCommandType.MOVE, new SimPosition(2,5)));
         com.addCommand(new SimCommand(SimCommandType.MOVE, new SimPosition(10,5)));
         com.addCommand(new SimCommand(SimCommandType.MOVE, new SimPosition(15,10)));
-        simulation.addSimObject(com);
+        simulation.addGroup(tank);
         simulation.addGroup(enemy);
+        simulation.addSimObject(com);
+//        simulation.addGroup(tank);
 
         Random random = new Random(10);
 

@@ -134,6 +134,9 @@ public class SimCore {
     public void addSimObject(SimExecutionScheduler simObject) {
         this.simObjects.add(simObject);
     }
+    public void addCommanders(SimCommander simCommander) {
+        this.simObjects.add(simCommander);
+    }
     public int getSimulationTime() {
         return currentStep;
     }
