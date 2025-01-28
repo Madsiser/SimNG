@@ -37,7 +37,7 @@ public abstract class SimGroup extends SimExecutionScheduler {
 
     private SimPosition nextPosition;
     private SimVector2i moveDirection;
-    private static double MOVE_RATE = 10.0;
+    private static double MOVE_RATE = 30.0;
 
     static int IdCounter = 0;
 
@@ -153,17 +153,25 @@ public abstract class SimGroup extends SimExecutionScheduler {
     /**
      * Metoda poruszania się o jeden krok z trasy.
      */
+    private int countSteps = 0;
+    private int initSteps = 0;
     protected void move(){
-        if (this.position.subtract(this.nextPosition).length() < 0.1){
+        double distance = this.position.subtract(this.nextPosition).length();
+        if (distance < 0.1 || countSteps <= 0){
             this.position = this.nextPosition;
             SimVector2i direction = route.poll();
             if (direction != null){
                 this.nextPosition = this.position.add(direction);
                 this.moveDirection = direction;
             }
+            this.countSteps = (int) Math.round((MOVE_RATE / this.getSpeed()));
+            this.initSteps = this.countSteps;
         }else{
 //            this.position = this.position.add(this.moveDirection.getX() * (this.getSpeed() / MOVE_RATE), this.moveDirection.getY() * (this.getSpeed() / MOVE_RATE));
-            this.position = this.position.add(this.moveDirection);
+//            this.position = this.position.add(this.moveDirection.getX() * distance * (this.getSpeed() / MOVE_RATE), this.moveDirection.getY() * distance * (this.getSpeed() / MOVE_RATE));
+            this.position = this.position.add((double) this.moveDirection.getX() / this.initSteps, (double) this.moveDirection.getY() / this.initSteps);
+//            this.position = this.position.add(this.moveDirection);
+            this.countSteps--;
         }
 
 
