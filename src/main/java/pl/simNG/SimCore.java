@@ -3,7 +3,10 @@ package pl.simNG;
 import pl.simNG.map.SimMap;
 import pl.simNG.scheduler.SimExecutionScheduler;
 
-import java.nio.file.FileAlreadyExistsException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -32,13 +35,19 @@ public class SimCore {
     /** Flaga oznaczająca, czy symulacja jest wstrzymana. */
     private volatile boolean paused = false;
     /** Czas trwania jednego kroku symulacji w milisekundach. */
-    private int timeOfOneStep = 100;
+    private int timeOfOneStep = 10;
+    /** Pula wątków do równoległego przetwarzania kroków symulacji. */
+    private ExecutorService threadPool;
+
+    public static int MAX_THREADS = 8;
+
 
     /**
      * Konstruktor klasy SimCore.
      * Inicjalizuje listę jednostek (grup).
      */
     public SimCore() {
+        this.setThreadPoolSize(1);
         this.groups = new ArrayList<>();
     }
 
@@ -78,7 +87,14 @@ public class SimCore {
                     break;
                 }
             } else {
-                System.out.println("Przekroczono " + timeOfOneStep + " ms w kroku: " + currentStep + " Czas wykonywania: " + elapsedTime + "ms");
+                int threadCount = getThreadPoolSize();
+                if (threadCount < MAX_THREADS){
+                    threadCount++;
+                    this.setThreadPoolSize(threadCount);
+                    System.out.println("Przekroczono " + timeOfOneStep + " ms w kroku: " + currentStep + " Czas wykonywania: " + elapsedTime + "ms." + " Zwiększono ilość wątków do " + threadCount);
+                }else {
+                    System.out.println("Przekroczono " + timeOfOneStep + " ms w kroku: " + currentStep + " Czas wykonywania: " + elapsedTime + "ms." + " Nie zwiększono ilości wątków gdyż osiągnięto maksymalna ilość " + threadCount);
+                }
             }
         }
     }
@@ -91,19 +107,52 @@ public class SimCore {
      * Wykonuje zadania i procesy dla bieżącego kroku symulacji.
      * @param currentStep bieżący krok symulacji
      */
-    private void runStep(int currentStep){
+    private void runStep(int currentStep) {
         for (SimExecutionScheduler simObject : simObjects) {
             simObject.runStep(currentStep);
         }
-        for (SimGroup group : groups) {
-            group.runStep(currentStep);
+        int threadCount = ((java.util.concurrent.ThreadPoolExecutor) threadPool).getCorePoolSize();
+        int chunkSize = (int) Math.ceil((double) groups.size() / threadCount);
+        List<Runnable> tasks = new ArrayList<>();
+        for (int i = 0; i < groups.size(); i += chunkSize) {
+            int start = i;
+            int end = Math.min(i + chunkSize, groups.size());
+            tasks.add(() -> {
+                for (int j = start; j < end; j++) {
+                    groups.get(j).runStep(currentStep);
+                }
+            });
         }
+        tasks.forEach(threadPool::submit);
     }
 
     /**
-     * Aktualizuje listę widocznych jednostek (grup) dla każdej jednostki (grupy) w symulacji.
-     * @param currentStep bieżący krok symulacji
+     * Ustawia aktualną liczbę wątków w puli wątków.
+     * @return liczba wątków w puli
      */
+    private void setThreadPoolSize(int newSize) {
+        if (threadPool != null && !threadPool.isShutdown()) {
+            threadPool.shutdown();
+        }
+        threadPool = Executors.newFixedThreadPool(newSize);
+    }
+    /**
+     * Zwraca aktualną liczbę wątków w puli wątków.
+     * @return liczba wątków w puli
+     */
+    public int getThreadPoolSize() {
+        if (threadPool instanceof java.util.concurrent.ThreadPoolExecutor) {
+            return ((java.util.concurrent.ThreadPoolExecutor) threadPool).getCorePoolSize();
+        }
+        return -1;
+    }
+
+
+
+    /**
+         * Aktualizuje listę widocznych jednostek (grup) dla każdej jednostki (grupy) w symulacji.
+         * @param currentStep bieżący krok symulacji
+         */
     private void visibleStep(int currentStep){
         for (SimGroup group : groups) {
             List<SimGroup> visibleGroups = getVisibleGroups(group);

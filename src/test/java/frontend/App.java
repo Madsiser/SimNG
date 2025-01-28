@@ -50,11 +50,18 @@ public class App extends Application {
 
         Random random = new Random(10);
 
-//        for (int i = 1; i <= 3; i++) {
-//            int x = random.nextInt(100);
-//            int y = random.nextInt(100);
-//            simulation.addGroup(new BattalionManager.ArtilleryBattalion("Ally " + i, new SimPosition(x, y), SimForceType.BLUFORCE, 10));
-//        }
+        for (int i = 1; i <= 10; i++) {
+            int x = random.nextInt(100);
+            int y = random.nextInt(100);
+            com = new SimCommander();
+            com.addCommand(new SimCommand(SimCommandType.MOVE, new SimPosition(10,10)));
+            com.addCommand(new SimCommand(SimCommandType.MOVE, new SimPosition(2,5)));
+            com.addCommand(new SimCommand(SimCommandType.MOVE, new SimPosition(10,5)));
+            com.addCommand(new SimCommand(SimCommandType.MOVE, new SimPosition(15,10)));
+            SimGroup obj = new BattalionManager.ArtilleryBattalion("Ally " + i, new SimPosition(x, y), SimForceType.BLUFORCE, 10);
+            com.addGroups(obj);
+            simulation.addGroup(obj);
+        }
 //        for (int i = 1; i <= 3; i++) {
 //            int x = random.nextInt(100);
 //            int y = random.nextInt(100);
