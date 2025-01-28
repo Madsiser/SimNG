@@ -35,7 +35,7 @@ public class SimCore {
     /** Flaga oznaczająca, czy symulacja jest wstrzymana. */
     private volatile boolean paused = false;
     /** Czas trwania jednego kroku symulacji w milisekundach. */
-    private int timeOfOneStep = 10;
+    private int timeOfOneStep = 100;
     /** Pula wątków do równoległego przetwarzania kroków symulacji. */
     private ExecutorService threadPool;
 
