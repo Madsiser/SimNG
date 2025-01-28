@@ -2,6 +2,10 @@ package pl.simNG;
 
 import java.util.Objects;
 
+/**
+ * Klasa reprezentująca pozycję w przestrzeni dwuwymiarowej.
+ * Używana w symulacji do określania lokalizacji jednostek lub punktów na mapie.
+ */
 public class SimPosition {
     private double x;
     private double y;
@@ -35,28 +39,22 @@ public class SimPosition {
     public double[] toArray(){
         return new double[]{getX(), getY()};
     }
-
+    /**
+     * Zwraca tablicę współrzędnych w postaci zaokrąglonej do najbliższej liczby całkowitej.
+     * @return tablica [X, Y] jako wartości typu int
+     */
     public int[] toIntArray() {
         return new int[]{(int) Math.round(this.x), (int) Math.round(this.y)};
     }
 
+    /**
+     * Oblicza odległość euklidesową do innej pozycji.
+     * @param other obiekt {@link SimPosition}, do którego liczona jest odległość
+     * @return odległość między obecną a podaną pozycją
+     */
     public double distanceTo(SimPosition other) {
         return Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2));
     }
-
-//    public void add(SimPosition position) {
-//        this.x += position.getX();
-//        this.y += position.getY();
-//    }
-//    public void add(SimVector2i vector2i) {
-//        this.x += vector2i.x;
-//        this.y += vector2i.y;
-//    }
-//    public void add(double dx, double dy) {
-//        this.x += dx;
-//        this.y += dy;
-//    }
-
     public SimPosition add(SimPosition position) {
         return new SimPosition(this.x + position.getX(), this.y + position.getY());
     }
@@ -99,6 +97,10 @@ public class SimPosition {
         return Objects.hash(x, y);
     }
 
+    /**
+     * Zwraca reprezentację obiektu w postaci ciągu znaków.
+     * @return współrzędne pozycji w formacie "(X, Y)"
+     */
     @Override
     public String toString() {
         return String.format("(%.2f, %.2f)", x, y);
