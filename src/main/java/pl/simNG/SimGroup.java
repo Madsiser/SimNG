@@ -179,21 +179,48 @@ public abstract class SimGroup extends SimExecutionScheduler {
 
     protected void commandLogic(){
         try {
-            switch (this.getCurrentCommand().type()) {
-                case MOVE -> {
-                    if (this.getWorkingOnCommand()) {
-                        if(this.position.equals(this.getCurrentCommand().data())){
-                            this.endCurrentCommand();
-                        }
-                    }else{
-                        this.startCurrentCommand();
-                        this.route = calculateRouteTo((SimPosition) this.getCurrentCommand().data());
+            //Ruch gdy przeciwnik znajduje się w zasięgu widocznosci
+            if (!visibleGroups.isEmpty()) {
+                SimGroup target = visibleGroups.get(0);
+                if (target.isDestroyed()) {
+                    visibleGroups.remove(target);
+                    if (!route.isEmpty()) {
+                        startCurrentCommand();
+                    }
+                } else {
+                    int myMinShootingRange = units.stream()
+                            .mapToInt(SimUnit::getShootingRange)
+                            .min()
+                            .orElse(1);
+
+                    double currentDistance = position.distanceTo(target.getPosition());
+
+                    if (currentDistance > myMinShootingRange-0.5) {
+                        route = calculateRouteTo(target.getPosition());
+                        workingOnCommand = true;
+                    } else {
+                        route.clear();
+                        workingOnCommand = false;
                     }
                 }
-                case DEFEND -> {
+                //Normalny ruch komendy
+            } else {
+                switch (this.getCurrentCommand().type()) {
+                    case MOVE -> {
+                        if (this.getWorkingOnCommand()) {
+                            if(this.position.equals(this.getCurrentCommand().data())){
+                                this.endCurrentCommand();
+                            }
+                        }else{
+                            this.startCurrentCommand();
+                            this.route = calculateRouteTo((SimPosition) this.getCurrentCommand().data());
+                        }
+                    }
+                    case DEFEND -> {
 
-                }
-                default -> {
+                    }
+                    default -> {
+                    }
                 }
             }
         } catch (Exception ignored){}
