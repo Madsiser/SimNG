@@ -33,6 +33,7 @@ public abstract class SimGroup extends SimExecutionScheduler {
     private final SimForceType forceType;
     /** Główny obiekt symulacji (rdzeń symulacji). */
     public SimCore parent = null;
+    public SimCommander commander = null;
 
     private SimPosition nextPosition;
     private SimVector2i moveDirection;

@@ -18,6 +18,7 @@ public class SimCommander extends SimExecutionScheduler {
     }
 
     public void addGroups(SimGroup group) {
+        group.commander = this;
         groups.add(group);
     }
 
