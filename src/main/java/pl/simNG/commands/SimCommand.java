@@ -18,4 +18,17 @@ public record SimCommand(SimCommandType type, Object data) {
                 ", data=" + data +
                 '}';
     }
+
+    public String show() {
+        switch (type) {
+            case MOVE:
+                return "Zadanie: Ruch | Cel: " + data;
+            case ATTACK:
+                return "Zadanie: Atak | Cel: " + data;
+            case DEFEND:
+                return "Zadanie: Obrona | Cel: " + data;
+            default:
+                return "Nieznane zadanie";
+        }
+    }
 }
