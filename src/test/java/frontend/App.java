@@ -25,7 +25,7 @@ public class App extends Application {
         SimGroup tank = new BattalionManager.TankBattalion("Blue Tank Battalion 1", new SimPosition(16, 18), SimForceType.BLUFORCE, 10);
 //        simulation.addGroup(new BattalionManager.MechanizedBattalion("Blue Mechanized Battalion 1", new SimPosition(22, 32), SimForceType.BLUFORCE, 10));
 //        simulation.addGroup(new BattalionManager.InfantryBattalion("Blue Infantry Battalion 1", new SimPosition(22, 25), SimForceType.BLUFORCE, 50));
-        SimGroup enemy = new BattalionManager.InfantryBattalion("Red Infantry Battalion 1", new SimPosition(13, 22), SimForceType.REDFORCE, 50);
+        SimGroup enemy = new BattalionManager.TankBattalion("Red Tank Battalion 1", new SimPosition(13, 22), SimForceType.REDFORCE, 50);
 //        simulation.addGroup(new BattalionManager.ArtilleryBattalion("Red Artillery Battalion 1", new SimPosition(27, 28), SimForceType.REDFORCE, 10));
 //        simulation.addGroup(new BattalionManager.ArtilleryBattalion("Red Enemy Battalion", new SimPosition(5, 15), SimForceType.REDFORCE, 10));
 //        simulation.addGroup(new BattalionManager.InfantryBattalion("Red Infantry Battalion 2", new SimPosition(25, 35), SimForceType.REDFORCE, 50));

@@ -171,7 +171,7 @@ public class BaseGroup extends SimGroup {
      */
     public void applyDamage(SimGroup attacker, SimUnit targetUnit) {
         if (units.contains(targetUnit) && targetUnit.getActiveUnits() > 0) {
-            //obsługa straty amunicji zniszczonego środka bojowego
+            //Obsługa straty amunicji zniszczonego środka bojowego
             int lostAmmo = targetUnit.killOneSubunit(random);
 
             Logger.log(this,
@@ -190,7 +190,7 @@ public class BaseGroup extends SimGroup {
                 destroyGroup();
                 Logger.log(this, "Grupa " + this.getName() + " została rozbita przez " + attacker.getName() + "!", parent.getSimulationTime());
             } else {
-                lastAttackerPosition = attacker.getPosition();
+                this.lastAttackerPosition = attacker.getPosition();
                 Logger.log(this,
                         "Została zaatakowana przez " + attacker.getName() + " na pozycji " + lastAttackerPosition, parent.getSimulationTime()
                 );

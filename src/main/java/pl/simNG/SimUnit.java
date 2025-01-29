@@ -253,8 +253,15 @@ public abstract class SimUnit {
         double targetWidth = target.getWidth();
         double targetHeight = target.getHeight();
 
-        return (shotX >= -targetWidth  / 2.0) && (shotX <= targetWidth  / 2.0)
+        boolean hit = (shotX >= -targetWidth / 2.0) && (shotX <= targetWidth / 2.0)
                 && (shotY >= -targetHeight / 2.0) && (shotY <= targetHeight / 2.0);
+
+        System.out.println(String.format(
+                "Prawdopodobieństwo trafienia | Atakujący: %s, Cel: %s, Odległość: %.2f, OdchyleniePoz: %.2f, OdchyleniePion: %.2f, TrafienieX: %.2f, TrafienieY: %.2f, SzerokośćCelu: %.2f, WysokośćCelu: %.2f, CzyTrafił: %s",
+                attacker.getName(), target.getName(), distance, currentHorizDev, currentVertDev, shotX, shotY, targetWidth, targetHeight, hit
+        ));
+
+        return hit;
     }
 
     /**
@@ -293,7 +300,15 @@ public abstract class SimUnit {
 
         double randomValue = this.random.nextDouble();
         double rolledPenetration = minPenetration + randomValue * (maxPenetration - minPenetration);
-        return (rolledPenetration >= armorThickness);
+
+        boolean destroyed = rolledPenetration >= armorThickness;
+
+        System.out.println(String.format(
+                "Prawdopodobieństwo zniszczenia | Atakujący: %s, Cel: %s, Penetracja: %.2f, Grubość Pancerza: %.2f, CzynnikLosowy: %.2f, MinPenetracja: %.2f, MaxPenetracja: %.2f, WylosowanaPenetracja: %.2f, CzyZniszczony: %s",
+                attacker.getName(), target.getName(), armorPenetration, armorThickness, randomFactor, minPenetration, maxPenetration, rolledPenetration, destroyed
+        ));
+
+        return destroyed;
     }
 
     //GETTERY

@@ -35,6 +35,8 @@ public abstract class SimGroup extends SimExecutionScheduler {
     public SimCore parent = null;
     public SimCommander commander = null;
 
+    protected SimPosition lastAttackerPosition = null;
+
     private SimPosition nextPosition;
     private SimVector2i moveDirection;
     private static double MOVE_RATE = 30.0;
@@ -179,21 +181,73 @@ public abstract class SimGroup extends SimExecutionScheduler {
 
     protected void commandLogic(){
         try {
-            switch (this.getCurrentCommand().type()) {
-                case MOVE -> {
-                    if (this.getWorkingOnCommand()) {
-                        if(this.position.equals(this.getCurrentCommand().data())){
-                            this.endCurrentCommand();
-                        }
-                    }else{
-                        this.startCurrentCommand();
-                        this.route = calculateRouteTo((SimPosition) this.getCurrentCommand().data());
+            //Ruch gdy przeciwnik znajduje się w zasięgu widocznosci
+            if (!visibleGroups.isEmpty()) {
+                SimGroup target = visibleGroups.get(0);
+                if (target.isDestroyed()) {
+                    visibleGroups.remove(target);
+                    if (!route.isEmpty()) {
+                        startCurrentCommand();
+                    }
+                } else {
+                    int myMinShootingRange = units.stream()
+                            .mapToInt(SimUnit::getShootingRange)
+                            .min()
+                            .orElse(1);
+
+                    double currentDistance = position.distanceTo(target.getPosition());
+
+                    if (currentDistance > myMinShootingRange-0.5) {
+                        route = calculateRouteTo(target.getPosition());
+                        workingOnCommand = true;
+                    } else {
+                        route.clear();
+                        workingOnCommand = false;
                     }
                 }
-                case DEFEND -> {
+                //Ruch gdy zostanie zaatakowany
+            } else if (lastAttackerPosition != null) {
+                boolean attackerStillExists = parent.getGroups().stream()
+                        .anyMatch(group -> group.getPosition().equals(lastAttackerPosition) && !group.isDestroyed());
 
+                if (!attackerStillExists) {
+                    lastAttackerPosition = null;
+                    route.clear();
+                    workingOnCommand = false;
+                } else {
+                    double currentDistanceToAttacker = position.distanceTo(lastAttackerPosition);
+
+                    int myMinShootingRange = units.stream()
+                            .mapToInt(SimUnit::getShootingRange)
+                            .min()
+                            .orElse(1);
+
+                    if (currentDistanceToAttacker > myMinShootingRange - 0.5) {
+                        route = calculateRouteTo(lastAttackerPosition);
+                        workingOnCommand = true;
+                    } else {
+                        route.clear();
+                        workingOnCommand = false;
+                    }
                 }
-                default -> {
+                //Normalny ruch
+            } else {
+                switch (this.getCurrentCommand().type()) {
+                    case MOVE -> {
+                        if (this.getWorkingOnCommand()) {
+                            if(this.position.equals(this.getCurrentCommand().data())){
+                                this.endCurrentCommand();
+                            }
+                        }else{
+                            this.startCurrentCommand();
+                            this.route = calculateRouteTo((SimPosition) this.getCurrentCommand().data());
+                        }
+                    }
+                    case DEFEND -> {
+
+                    }
+                    default -> {
+                    }
                 }
             }
         } catch (Exception ignored){}

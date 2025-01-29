@@ -246,6 +246,15 @@ public class SimCore {
     public void setTimeOfOneStep(int timeOfOneStep) {
         this.timeOfOneStep = timeOfOneStep;
     }
+
+    /**
+     * Zwraca czas trwania jednego kroku symulacji.
+     * @return czas trwania kroku w milisekundach
+     */
+    public int getTimeOfOneStep() {
+        return timeOfOneStep;
+    }
+
     /**
      * Dodaje nowy obiekt symulacyjny do listy `simObjects`.
      * @param simObject obiekt implementujący SimExecutionScheduler
@@ -256,6 +265,7 @@ public class SimCore {
     public void addCommanders(SimCommander simCommander) {
         this.simObjects.add(simCommander);
     }
+
     /**
      * Zwraca bieżący krok symulacji.
      * @return numer bieżącego kroku symulacji
