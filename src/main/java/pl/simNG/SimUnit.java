@@ -257,7 +257,7 @@ public abstract class SimUnit {
                 && (shotY >= -targetHeight / 2.0) && (shotY <= targetHeight / 2.0);
 
         System.out.println(String.format(
-                "HitProbability | Attacker: %s, Target: %s, Distance: %.2f, HorizDev: %.2f, VertDev: %.2f, ShotX: %.2f, ShotY: %.2f, TargetWidth: %.2f, TargetHeight: %.2f, Hit: %s",
+                "Prawdopodobieństwo trafienia | Atakujący: %s, Cel: %s, Odległość: %.2f, OdchyleniePoz: %.2f, OdchyleniePion: %.2f, TrafienieX: %.2f, TrafienieY: %.2f, SzerokośćCelu: %.2f, WysokośćCelu: %.2f, CzyTrafił: %s",
                 attacker.getName(), target.getName(), distance, currentHorizDev, currentVertDev, shotX, shotY, targetWidth, targetHeight, hit
         ));
 
@@ -304,7 +304,7 @@ public abstract class SimUnit {
         boolean destroyed = rolledPenetration >= armorThickness;
 
         System.out.println(String.format(
-                "DestructionProbability | Attacker: %s, Target: %s, ArmorPen: %.2f, ArmorThick: %.2f, RandomFactor: %.2f, MinPen: %.2f, MaxPen: %.2f, RolledPen: %.2f, Destroyed: %s",
+                "Prawdopodobieństwo zniszczenia | Atakujący: %s, Cel: %s, Penetracja: %.2f, Grubość Pancerza: %.2f, CzynnikLosowy: %.2f, MinPenetracja: %.2f, MaxPenetracja: %.2f, WylosowanaPenetracja: %.2f, CzyZniszczony: %s",
                 attacker.getName(), target.getName(), armorPenetration, armorThickness, randomFactor, minPenetration, maxPenetration, rolledPenetration, destroyed
         ));
 
