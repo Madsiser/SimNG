@@ -56,6 +56,13 @@ public class SimCommander extends SimExecutionScheduler {
         this.commandQueue.clear();
     }
 
+    public void stopCommands(){
+        this.clearCommands();
+        for (SimGroup g : groups) {
+            g.route = null;
+        }
+    }
+
     public LinkedList<SimCommand> getCommandQueue() {
         return commandQueue;
     }
