@@ -233,7 +233,7 @@ public abstract class SimGroup extends SimExecutionScheduler {
                 //Normalny ruch
             } else {
                 switch (this.getCurrentCommand().type()) {
-                    case MOVE -> {
+                    case MOVE, ATTACK, DEFEND -> {
                         if (this.getWorkingOnCommand()) {
                             if(this.position.equals(this.getCurrentCommand().data())){
                                 this.endCurrentCommand();
@@ -242,9 +242,6 @@ public abstract class SimGroup extends SimExecutionScheduler {
                             this.startCurrentCommand();
                             this.route = calculateRouteTo((SimPosition) this.getCurrentCommand().data());
                         }
-                    }
-                    case DEFEND -> {
-
                     }
                     default -> {
                     }
@@ -326,7 +323,9 @@ public abstract class SimGroup extends SimExecutionScheduler {
         return this.currentCommand;
     }
     protected void startCurrentCommand(){
-        this.workingOnCommand = true;
+        if (currentCommand != null){
+            this.workingOnCommand = true;
+        }
     }
     protected boolean getWorkingOnCommand(){
         return this.workingOnCommand;

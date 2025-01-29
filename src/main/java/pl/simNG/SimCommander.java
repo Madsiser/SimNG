@@ -59,7 +59,8 @@ public class SimCommander extends SimExecutionScheduler {
     public void stopCommands(){
         this.clearCommands();
         for (SimGroup g : groups) {
-            g.route = null;
+            g.route.clear();
+            g.endCurrentCommand();
         }
     }
 
@@ -78,7 +79,7 @@ public class SimCommander extends SimExecutionScheduler {
     private void mainFx(){
         if (allDone()){
             assignNewCommand();
-            addTask(this::mainFx,15);
+            addTask(this::mainFx,1);
         }else {
             addTask(this::mainFx,1);
         }
